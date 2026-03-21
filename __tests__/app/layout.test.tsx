@@ -10,6 +10,10 @@ jest.mock('@/components/ui/sonner', () => ({
   Toaster: () => <div data-testid="toaster" />,
 }))
 
+jest.mock('@/components/ui/tooltip', () => ({
+  TooltipProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}))
+
 describe('RootLayout', () => {
   it('renders children', () => {
     render(<RootLayout><p>content</p></RootLayout>)

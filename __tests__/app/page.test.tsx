@@ -1,9 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import DashboardPage from '@/app/page'
-
-jest.mock('@/components/dashboard/sidebar', () => ({
-  Sidebar: () => null,
-}))
+import DashboardPage from '@/app/(dashboard)/page'
 
 describe('DashboardPage', () => {
   it('renders the dashboard heading', () => {
