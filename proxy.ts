@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const protectedRoutes = ['/']
-const publicRoutes = ['/sign-in']
+const publicRoutes = ['/sign-in', '/sign-up']
 
 export function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname

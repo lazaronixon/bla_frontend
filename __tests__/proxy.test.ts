@@ -42,5 +42,18 @@ describe('proxy', () => {
       expect(res.status).toBe(307)
       expect(res.headers.get('location')).toContain('/')
     })
+
+    it('allows access to /sign-up without a session', () => {
+      const req = makeRequest('/sign-up')
+      const res = proxy(req)
+      expect(res.status).toBe(200)
+    })
+
+    it('redirects to / when accessing /sign-up with an existing session', () => {
+      const req = makeRequest('/sign-up', 'some-token')
+      const res = proxy(req)
+      expect(res.status).toBe(307)
+      expect(res.headers.get('location')).toContain('/')
+    })
   })
 })

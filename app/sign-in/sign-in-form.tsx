@@ -69,6 +69,12 @@ export function SignInForm() {
             )}
             {pending ? 'Signing in…' : 'Sign in'}
           </Button>
+          <p className="flex justify-center gap-1 text-sm text-muted-foreground">
+            <span>{"Don't have an account?"}</span>
+            <a href="/sign-up" className="text-foreground underline underline-offset-4 hover:text-primary">
+              Sign up
+            </a>
+          </p>
         </CardContent>
       </form>
     </Card>
