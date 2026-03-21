@@ -8,14 +8,14 @@ export async function getSession(): Promise<string | undefined> {
   return cookieStore.get(SESSION_COOKIE)?.value
 }
 
-export async function createSession(token: string): Promise<void> {
+export async function createSession(token: string, maxAge: number): Promise<void> {
   const cookieStore = await cookies()
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60,
+    maxAge,
   })
 }
 

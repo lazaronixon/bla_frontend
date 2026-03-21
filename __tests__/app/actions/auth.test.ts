@@ -28,25 +28,28 @@ const signUpData = { email: 'a@b.com', password: 'pass', password_confirmation: 
 
 describe('signIn', () => {
   it('returns error when response is not ok', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: false, headers: { get: () => null } })
+    global.fetch = jest.fn().mockResolvedValue({ ok: false, headers: new Headers() })
     const result = await signIn(undefined, makeFormData(signInData))
     expect(result).toEqual({ error: 'Invalid email or password.' })
   })
 
   it('returns error when token is missing', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: true, headers: { get: () => null } })
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, headers: new Headers() })
     const result = await signIn(undefined, makeFormData(signInData))
     expect(result).toEqual({ error: 'Authentication failed. Please try again.' })
   })
 
   it('creates session and redirects on success', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: true, headers: { get: () => 'my-token' } })
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      headers: new Headers({ 'X-Session-Token': 'my-token', 'X-Session-Expires-In': '3600' }),
+    })
     await expect(signIn(undefined, makeFormData(signInData))).rejects.toThrow('NEXT_REDIRECT:/')
-    expect(mockCreateSession).toHaveBeenCalledWith('my-token')
+    expect(mockCreateSession).toHaveBeenCalledWith('my-token', 3600)
   })
 
   it('posts to the correct endpoint with correct body', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: false, headers: { get: () => null } })
+    global.fetch = jest.fn().mockResolvedValue({ ok: false, headers: new Headers() })
     await signIn(undefined, makeFormData({ email: 'a@b.com', password: 'secret' }))
     expect(global.fetch).toHaveBeenCalledWith(`${BACKEND_URL}/sign_in`, expect.objectContaining({
       method: 'POST',

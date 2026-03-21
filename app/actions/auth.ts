@@ -25,11 +25,12 @@ export async function signIn(
   }
 
   const token = response.headers.get('X-Session-Token')
-  if (!token) {
+  const expiresIn = Number(response.headers.get('X-Session-Expires-In'))
+  if (!token || !expiresIn) {
     return { error: 'Authentication failed. Please try again.' }
   }
 
-  await createSession(token)
+  await createSession(token, expiresIn)
   redirect('/')
 }
 
