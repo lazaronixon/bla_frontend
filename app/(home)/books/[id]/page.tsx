@@ -17,7 +17,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { LocalDateTime } from './local-datetime'
+import { formatLocalDateTime } from '@/lib/utils'
 import { ReturnButton } from './return-button'
 
 type Book = {
@@ -141,9 +141,9 @@ export default async function BookBorrowingsPage({
             borrowings.map((b) => (
               <TableRow key={b.id}>
                 <TableCell className="font-medium">{b.user.email_address}</TableCell>
-                <TableCell><LocalDateTime iso={b.created_at} /></TableCell>
-                <TableCell><LocalDateTime iso={b.due_at} /></TableCell>
-                <TableCell>{b.returned_at ? <LocalDateTime iso={b.returned_at} /> : '—'}</TableCell>
+                <TableCell>{formatLocalDateTime(b.created_at)}</TableCell>
+                <TableCell>{formatLocalDateTime(b.due_at)}</TableCell>
+                <TableCell>{b.returned_at ? formatLocalDateTime(b.returned_at) : '—'}</TableCell>
                 <TableCell className="text-right">
                   {!b.returned_at && <ReturnButton bookId={book.id} borrowingId={b.id} />}
                 </TableCell>

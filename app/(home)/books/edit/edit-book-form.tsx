@@ -33,7 +33,7 @@ export function EditBookForm({
   useEffect(() => {
     if (state?.error) toast.error(state.error)
     if (state?.success) onSuccess?.()
-  }, [state])
+  }, [state, onSuccess])
 
   return (
     <form action={action} className="flex flex-col gap-6">
