@@ -18,6 +18,12 @@ jest.mock('@/app/(dashboard)/books/books-toolbar', () => ({
   ),
 }))
 
+jest.mock('@/app/(dashboard)/books/edit-book-button', () => ({
+  EditBookButton: ({ book }: { book: { id: number } }) => (
+    <div data-testid="edit-book-button" data-book-id={book.id} />
+  ),
+}))
+
 import { getSession } from '@/lib/session'
 
 const mockGetSession = getSession as jest.Mock
@@ -99,5 +105,20 @@ describe('BooksPage', () => {
     await renderPage()
     expect(screen.queryByRole('row', { name: /dune/i })).not.toBeInTheDocument()
     expect(screen.getByRole('table')).toBeInTheDocument()
+  })
+
+  it('renders an edit button for each book', async () => {
+    mockFetch(librarianUser)
+    await renderPage()
+    const buttons = screen.getAllByTestId('edit-book-button')
+    expect(buttons).toHaveLength(books.length)
+  })
+
+  it('passes the correct book id to each edit button', async () => {
+    mockFetch(librarianUser)
+    await renderPage()
+    const buttons = screen.getAllByTestId('edit-book-button')
+    expect(buttons[0]).toHaveAttribute('data-book-id', '1')
+    expect(buttons[1]).toHaveAttribute('data-book-id', '2')
   })
 })

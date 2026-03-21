@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { BooksToolbar } from './books-toolbar'
+import { EditBookButton } from './edit-book-button'
 
 type Book = {
   id: number
@@ -65,6 +66,7 @@ export default async function BooksPage({
             <TableHead>Genre</TableHead>
             <TableHead>ISBN</TableHead>
             <TableHead>Copies</TableHead>
+            <TableHead />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -75,6 +77,9 @@ export default async function BooksPage({
               <TableCell>{book.genre}</TableCell>
               <TableCell>{book.isbn}</TableCell>
               <TableCell>{book.copies}</TableCell>
+              <TableCell className="text-right">
+                <EditBookButton book={book} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
