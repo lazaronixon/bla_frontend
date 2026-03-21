@@ -7,6 +7,7 @@ import { BACKEND_URL } from '@/lib/config'
 
 export type CreateBookState = { error?: string; success?: boolean } | undefined
 export type UpdateBookState = { error?: string; success?: boolean } | undefined
+export type DeleteBookState = { error?: string; success?: boolean } | undefined
 
 export async function createBook(
   _state: CreateBookState,
@@ -61,6 +62,25 @@ export async function updateBook(
       isbn: formData.get('isbn'),
       copies: Number(formData.get('copies')),
     }),
+  })
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    const messages = data.errors as string[] | undefined
+    return { error: messages?.join('. ') ?? 'Something went wrong.' }
+  }
+
+  revalidatePath('/books')
+  return { success: true }
+}
+
+export async function deleteBook(id: number): Promise<DeleteBookState> {
+  const token = await getSession()
+  if (!token) redirect('/sign-in')
+
+  const res = await fetch(`${BACKEND_URL}/books/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
   })
 
   if (!res.ok) {

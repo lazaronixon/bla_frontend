@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table'
 import { BooksToolbar } from './books-toolbar'
 import { EditBookButton } from './edit-book-button'
+import { DeleteBookButton } from './delete-book-button'
 
 type Book = {
   id: number
@@ -79,6 +80,7 @@ export default async function BooksPage({
               <TableCell>{book.copies}</TableCell>
               <TableCell className="text-right">
                 <EditBookButton book={book} />
+                <DeleteBookButton id={book.id} title={book.title} />
               </TableCell>
             </TableRow>
           ))}
