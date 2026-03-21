@@ -31,10 +31,10 @@ export function ReturnButton({
   function handleConfirm() {
     startTransition(async () => {
       const state = await returnBorrowing(bookId, borrowingId)
+      setOpen(false)
       if (state?.error) {
         toast.error(state.error)
       } else {
-        setOpen(false)
         router.refresh()
       }
     })
