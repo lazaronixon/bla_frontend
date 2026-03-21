@@ -24,10 +24,10 @@ export function DeleteBookButton({ id, title }: { id: number; title: string }) {
   function handleDelete() {
     startTransition(async () => {
       const state = await deleteBook(id)
+      setOpen(false)
       if (state?.error) {
         toast.error(state.error)
       } else {
-        setOpen(false)
         router.refresh()
       }
     })
