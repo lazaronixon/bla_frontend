@@ -108,7 +108,7 @@ describe('BookBorrowingsPage', () => {
   it('renders the book title and author', async () => {
     mockFetch(librarianUser)
     await renderPage()
-    expect(screen.getByText('Dune')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Dune' })).toBeInTheDocument()
     expect(screen.getByText('Frank Herbert')).toBeInTheDocument()
   })
 
