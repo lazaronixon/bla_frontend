@@ -1,7 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { createSession, deleteSession } from '@/lib/session'
+import { createSession, deleteSession, setRoleCookie, deleteRoleCookie } from '@/lib/session'
 import { BACKEND_URL } from '@/lib/config'
 
 export type SignInState = { error?: string } | undefined
@@ -26,12 +26,17 @@ export async function signIn(
 
   const token = response.headers.get('X-Session-Token')
   const expiresIn = Number(response.headers.get('X-Session-Expires-In'))
+
   if (!token || !expiresIn) {
     return { error: 'Authentication failed. Please try again.' }
   }
 
   await createSession(token, expiresIn)
-  redirect('/')
+
+  const { role } = await response.json()
+  await setRoleCookie(role)
+
+  redirect(role === 'librarian' ? '/librarian' : '/member')
 }
 
 export async function signUp(
@@ -67,5 +72,6 @@ export async function signUp(
 
 export async function signOut(): Promise<void> {
   await deleteSession()
+  await deleteRoleCookie()
   redirect('/sign-in')
 }

@@ -10,6 +10,8 @@ jest.mock('next/navigation', () => ({
 jest.mock('@/lib/session', () => ({
   createSession: jest.fn(),
   deleteSession: jest.fn(),
+  setRoleCookie: jest.fn(),
+  deleteRoleCookie: jest.fn(),
 }))
 
 import { createSession, deleteSession } from '@/lib/session'
@@ -39,13 +41,23 @@ describe('signIn', () => {
     expect(result).toEqual({ error: 'Authentication failed. Please try again.' })
   })
 
-  it('creates session and redirects on success', async () => {
+  it('redirects to /member for a member on success', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       headers: new Headers({ 'X-Session-Token': 'my-token', 'X-Session-Expires-In': '3600' }),
+      json: async () => ({ role: 'member' }),
     })
-    await expect(signIn(undefined, makeFormData(signInData))).rejects.toThrow('NEXT_REDIRECT:/')
+    await expect(signIn(undefined, makeFormData(signInData))).rejects.toThrow('NEXT_REDIRECT:/member')
     expect(mockCreateSession).toHaveBeenCalledWith('my-token', 3600)
+  })
+
+  it('redirects to /librarian for a librarian on success', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      headers: new Headers({ 'X-Session-Token': 'my-token', 'X-Session-Expires-In': '3600' }),
+      json: async () => ({ role: 'librarian' }),
+    })
+    await expect(signIn(undefined, makeFormData(signInData))).rejects.toThrow('NEXT_REDIRECT:/librarian')
   })
 
   it('posts to the correct endpoint with correct body', async () => {

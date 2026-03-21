@@ -1,12 +1,6 @@
 import { createBook, updateBook, returnBorrowing } from '@/app/actions/books'
 import { BACKEND_URL } from '@/lib/config'
 
-jest.mock('next/navigation', () => ({
-  redirect: jest.fn((url: string) => {
-    throw new Error(`NEXT_REDIRECT:${url}`)
-  }),
-}))
-
 jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
 }))
@@ -34,11 +28,6 @@ describe('createBook', () => {
     mockGetSession.mockResolvedValue('test-token')
   })
 
-  it('redirects to /sign-in when no session', async () => {
-    mockGetSession.mockResolvedValue(undefined)
-    await expect(createBook(undefined, makeFormData(validBook))).rejects.toThrow('NEXT_REDIRECT:/sign-in')
-  })
-
   it('posts to /books with auth header and correct body', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: true })
     await createBook(undefined, makeFormData(validBook))
@@ -53,7 +42,7 @@ describe('createBook', () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: true })
     const result = await createBook(undefined, makeFormData(validBook))
     expect(result).toEqual({ success: true })
-    expect(mockRevalidatePath).toHaveBeenCalledWith('/books')
+    expect(mockRevalidatePath).toHaveBeenCalledWith('/librarian/books')
   })
 
   it('returns error messages from API on 422', async () => {
@@ -80,11 +69,6 @@ describe('updateBook', () => {
     mockGetSession.mockResolvedValue('test-token')
   })
 
-  it('redirects to /sign-in when no session', async () => {
-    mockGetSession.mockResolvedValue(undefined)
-    await expect(updateBook(1, undefined, makeFormData(validBook))).rejects.toThrow('NEXT_REDIRECT:/sign-in')
-  })
-
   it('patches /books/:id with auth header and correct body', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: true })
     await updateBook(42, undefined, makeFormData(validBook))
@@ -99,7 +83,7 @@ describe('updateBook', () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: true })
     const result = await updateBook(1, undefined, makeFormData(validBook))
     expect(result).toEqual({ success: true })
-    expect(mockRevalidatePath).toHaveBeenCalledWith('/books')
+    expect(mockRevalidatePath).toHaveBeenCalledWith('/librarian/books')
   })
 
   it('returns error messages from API on 422', async () => {
@@ -126,11 +110,6 @@ describe('returnBorrowing', () => {
     mockGetSession.mockResolvedValue('test-token')
   })
 
-  it('redirects to /sign-in when no session', async () => {
-    mockGetSession.mockResolvedValue(undefined)
-    await expect(returnBorrowing(1, 10)).rejects.toThrow('NEXT_REDIRECT:/sign-in')
-  })
-
   it('patches the correct borrowing URL with auth header', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: true })
     await returnBorrowing(3, 42)
@@ -155,7 +134,7 @@ describe('returnBorrowing', () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: true })
     const result = await returnBorrowing(3, 10)
     expect(result).toEqual({ success: true })
-    expect(mockRevalidatePath).toHaveBeenCalledWith('/books/3')
+    expect(mockRevalidatePath).toHaveBeenCalledWith('/librarian/books/3')
   })
 
   it('returns error messages from API on failure', async () => {

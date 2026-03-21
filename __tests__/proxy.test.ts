@@ -22,10 +22,41 @@ describe('proxy', () => {
       expect(res.headers.get('location')).toContain('/sign-in')
     })
 
-    it('allows access to / with a valid session cookie', () => {
-      const req = makeRequest('/', 'some-token')
+    it('redirects to /sign-in when accessing /librarian/books without a session', () => {
+      const req = makeRequest('/librarian/books')
+      const res = proxy(req)
+      expect(res.status).toBe(307)
+      expect(res.headers.get('location')).toContain('/sign-in')
+    })
+
+    it('redirects a member away from /librarian/books', () => {
+      const req = makeRequest('/librarian/books', 'some-token')
+      req.cookies.set('bla_role', 'member')
+      const res = proxy(req)
+      expect(res.status).toBe(307)
+      expect(res.headers.get('location')).toBe('http://localhost:3001/')
+    })
+
+    it('allows a librarian to access /librarian/books', () => {
+      const req = makeRequest('/librarian/books', 'some-token')
+      req.cookies.set('bla_role', 'librarian')
       const res = proxy(req)
       expect(res.status).toBe(200)
+    })
+
+    it('redirects to /member when accessing / with a session and no role cookie', () => {
+      const req = makeRequest('/', 'some-token')
+      const res = proxy(req)
+      expect(res.status).toBe(307)
+      expect(res.headers.get('location')).toContain('/member')
+    })
+
+    it('redirects to /librarian when accessing / with a librarian session', () => {
+      const req = makeRequest('/', 'some-token')
+      req.cookies.set('bla_role', 'librarian')
+      const res = proxy(req)
+      expect(res.status).toBe(307)
+      expect(res.headers.get('location')).toContain('/librarian')
     })
   })
 
@@ -36,11 +67,19 @@ describe('proxy', () => {
       expect(res.status).toBe(200)
     })
 
-    it('redirects to / when accessing /sign-in with an existing session', () => {
+    it('redirects to /member when accessing /sign-in with an existing session and no role', () => {
       const req = makeRequest('/sign-in', 'some-token')
       const res = proxy(req)
       expect(res.status).toBe(307)
-      expect(res.headers.get('location')).toContain('/')
+      expect(res.headers.get('location')).toContain('/member')
+    })
+
+    it('redirects to /librarian when accessing /sign-in with a librarian session', () => {
+      const req = makeRequest('/sign-in', 'some-token')
+      req.cookies.set('bla_role', 'librarian')
+      const res = proxy(req)
+      expect(res.status).toBe(307)
+      expect(res.headers.get('location')).toContain('/librarian')
     })
 
     it('allows access to /sign-up without a session', () => {
@@ -49,11 +88,11 @@ describe('proxy', () => {
       expect(res.status).toBe(200)
     })
 
-    it('redirects to / when accessing /sign-up with an existing session', () => {
+    it('redirects to /member when accessing /sign-up with an existing session and no role', () => {
       const req = makeRequest('/sign-up', 'some-token')
       const res = proxy(req)
       expect(res.status).toBe(307)
-      expect(res.headers.get('location')).toContain('/')
+      expect(res.headers.get('location')).toContain('/member')
     })
   })
 })
