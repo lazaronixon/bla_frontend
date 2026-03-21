@@ -8,8 +8,8 @@ jest.mock('@/app/(home)/books/[id]/due-cell', () => ({
 
 
 jest.mock('@/app/(home)/books/[id]/return-button', () => ({
-  ReturnButton: ({ borrowingId }: { borrowingId: number }) => (
-    <button data-testid="return-button" data-borrowing-id={borrowingId}>Return</button>
+  ReturnButton: ({ borrowingId, disabled }: { borrowingId: number; disabled?: boolean }) => (
+    <button data-testid="return-button" data-borrowing-id={borrowingId} disabled={disabled}>Return</button>
   ),
 }))
 
@@ -158,19 +158,25 @@ describe('BookBorrowingsPage', () => {
     )
   })
 
-  it('renders a return button only for unreturned borrowings', async () => {
+  it('renders a return button for every borrowing', async () => {
     mockFetch(librarianUser)
     await renderPage()
-    const buttons = screen.getAllByTestId('return-button')
-    expect(buttons).toHaveLength(1)
-    expect(buttons[0]).toHaveAttribute('data-borrowing-id', '10')
+    expect(screen.getAllByTestId('return-button')).toHaveLength(2)
   })
 
-  it('does not render a return button for already returned borrowings', async () => {
+  it('enables the return button for unreturned borrowings', async () => {
     mockFetch(librarianUser)
     await renderPage()
     const buttons = screen.getAllByTestId('return-button')
-    const borrowingIds = buttons.map((b) => b.getAttribute('data-borrowing-id'))
-    expect(borrowingIds).not.toContain('11')
+    const unreturned = buttons.find((b) => b.getAttribute('data-borrowing-id') === '10')
+    expect(unreturned).toBeEnabled()
+  })
+
+  it('disables the return button for already returned borrowings', async () => {
+    mockFetch(librarianUser)
+    await renderPage()
+    const buttons = screen.getAllByTestId('return-button')
+    const returned = buttons.find((b) => b.getAttribute('data-borrowing-id') === '11')
+    expect(returned).toBeDisabled()
   })
 })

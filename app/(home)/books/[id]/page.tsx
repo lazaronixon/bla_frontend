@@ -146,7 +146,7 @@ export default async function BookBorrowingsPage({
                 <TableCell><DueCell dueAt={b.due_at} /></TableCell>
                 <TableCell>{b.returned_at ? formatLocalDateTime(b.returned_at) : '—'}</TableCell>
                 <TableCell className="text-right">
-                  {!b.returned_at && <ReturnButton bookId={book.id} borrowingId={b.id} />}
+                  <ReturnButton bookId={book.id} borrowingId={b.id} disabled={!!b.returned_at} />
                 </TableCell>
               </TableRow>
             ))

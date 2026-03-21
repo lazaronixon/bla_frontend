@@ -18,9 +18,11 @@ import { returnBorrowing } from '@/app/actions/books'
 export function ReturnButton({
   bookId,
   borrowingId,
+  disabled = false,
 }: {
   bookId: number
   borrowingId: number
+  disabled?: boolean
 }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -40,7 +42,7 @@ export function ReturnButton({
 
   return (
     <>
-      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+      <Button variant="outline" size="sm" onClick={() => setOpen(true)} disabled={disabled || pending}>
         Return
       </Button>
 

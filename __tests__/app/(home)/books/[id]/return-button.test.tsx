@@ -26,6 +26,16 @@ describe('ReturnButton', () => {
     expect(screen.getByRole('button', { name: /^return$/i })).toBeInTheDocument()
   })
 
+  it('is disabled when disabled prop is true', () => {
+    render(<ReturnButton bookId={1} borrowingId={10} disabled />)
+    expect(screen.getByRole('button', { name: /^return$/i })).toBeDisabled()
+  })
+
+  it('is enabled by default', () => {
+    render(<ReturnButton bookId={1} borrowingId={10} />)
+    expect(screen.getByRole('button', { name: /^return$/i })).toBeEnabled()
+  })
+
   it('does not show the confirmation dialog before clicking', () => {
     render(<ReturnButton bookId={1} borrowingId={10} />)
     expect(screen.queryByText(/mark as returned/i)).not.toBeInTheDocument()
