@@ -3,13 +3,27 @@ import { BookOpenIcon, LayoutDashboardIcon, LibraryIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { signOut } from '@/app/actions/auth'
+import { getSession } from '@/lib/session'
 
-const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboardIcon },
-  { href: '/books', label: 'Books', icon: BookOpenIcon },
-]
+async function getCurrentUser() {
+  const token = await getSession()
+  if (!token) return null
+  const res = await fetch('http://localhost:3000/my/user', {
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+  })
+  if (!res.ok) return null
+  return res.json()
+}
 
-export function Sidebar() {
+export async function Sidebar() {
+  const user = await getCurrentUser()
+  const navItems = [
+    { href: '/', label: 'Dashboard', icon: LayoutDashboardIcon },
+    ...(user?.role === 'librarian'
+      ? [{ href: '/books', label: 'Books', icon: BookOpenIcon }]
+      : []),
+  ]
+
   return (
     <aside className="flex flex-col w-56 shrink-0 border-r bg-card px-3 py-4">
       <div className="flex items-center gap-2 px-2 py-1 mb-4">
@@ -31,7 +45,7 @@ export function Sidebar() {
       </nav>
       <Separator className="mb-4" />
       <form action={signOut}>
-        <Button variant="ghost" size="sm" className="w-full justify-start">
+        <Button variant="destructive" size="sm" className="w-full">
           Sign out
         </Button>
       </form>
