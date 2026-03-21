@@ -18,15 +18,9 @@ jest.mock('@/app/(dashboard)/books/books-toolbar', () => ({
   ),
 }))
 
-jest.mock('@/app/(dashboard)/books/edit-book-button', () => ({
-  EditBookButton: ({ book }: { book: { id: number } }) => (
-    <div data-testid="edit-book-button" data-book-id={book.id} />
-  ),
-}))
-
-jest.mock('@/app/(dashboard)/books/delete-book-button', () => ({
-  DeleteBookButton: ({ id }: { id: number }) => (
-    <div data-testid="delete-book-button" data-book-id={id} />
+jest.mock('@/app/(dashboard)/books/book-actions-menu', () => ({
+  BookActionsMenu: ({ book }: { book: { id: number } }) => (
+    <div data-testid="book-actions-menu" data-book-id={book.id} />
   ),
 }))
 
@@ -113,18 +107,18 @@ describe('BooksPage', () => {
     expect(screen.getByRole('table')).toBeInTheDocument()
   })
 
-  it('renders an edit button for each book', async () => {
+  it('renders an actions menu for each book', async () => {
     mockFetch(librarianUser)
     await renderPage()
-    const buttons = screen.getAllByTestId('edit-book-button')
-    expect(buttons).toHaveLength(books.length)
+    const menus = screen.getAllByTestId('book-actions-menu')
+    expect(menus).toHaveLength(books.length)
   })
 
-  it('passes the correct book id to each edit button', async () => {
+  it('passes the correct book id to each actions menu', async () => {
     mockFetch(librarianUser)
     await renderPage()
-    const buttons = screen.getAllByTestId('edit-book-button')
-    expect(buttons[0]).toHaveAttribute('data-book-id', '1')
-    expect(buttons[1]).toHaveAttribute('data-book-id', '2')
+    const menus = screen.getAllByTestId('book-actions-menu')
+    expect(menus[0]).toHaveAttribute('data-book-id', '1')
+    expect(menus[1]).toHaveAttribute('data-book-id', '2')
   })
 })
