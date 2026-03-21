@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboardIcon } from 'lucide-react'
+import { LayoutDashboardIcon, BookOpenIcon } from 'lucide-react'
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -11,6 +11,7 @@ import {
 
 const navItems = [
   { href: '/member', label: 'Dashboard', icon: LayoutDashboardIcon },
+  { href: '/member/books', label: 'Books', icon: BookOpenIcon },
 ]
 
 export function NavItems() {

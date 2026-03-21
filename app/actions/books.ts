@@ -128,6 +128,29 @@ export async function returnBorrowing(
   return { success: true }
 }
 
+export type CreateBorrowingState = { error?: string; success?: boolean } | undefined
+
+export async function createBorrowing(bookId: number): Promise<CreateBorrowingState> {
+  const token = await getSession()
+
+  const res = await fetch(`${BACKEND_URL}/books/${bookId}/borrowings`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    const message = data.error as string | undefined
+    return { error: message ?? 'Something went wrong.' }
+  }
+
+  revalidatePath('/member/books')
+  return { success: true }
+}
+
 export async function deleteBook(id: number): Promise<DeleteBookState> {
   const token = await getSession()
 
