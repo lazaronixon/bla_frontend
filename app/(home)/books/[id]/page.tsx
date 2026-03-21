@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { formatLocalDateTime } from '@/lib/utils'
 import { ReturnButton } from './return-button'
+import { DueCell } from './due-cell'
 
 type Book = {
   id: number
@@ -142,7 +143,7 @@ export default async function BookBorrowingsPage({
               <TableRow key={b.id}>
                 <TableCell className="font-medium">{b.user.email_address}</TableCell>
                 <TableCell>{formatLocalDateTime(b.created_at)}</TableCell>
-                <TableCell>{formatLocalDateTime(b.due_at)}</TableCell>
+                <TableCell><DueCell dueAt={b.due_at} /></TableCell>
                 <TableCell>{b.returned_at ? formatLocalDateTime(b.returned_at) : '—'}</TableCell>
                 <TableCell className="text-right">
                   {!b.returned_at && <ReturnButton bookId={book.id} borrowingId={b.id} />}

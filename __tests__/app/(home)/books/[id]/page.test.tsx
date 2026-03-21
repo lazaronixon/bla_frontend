@@ -2,6 +2,11 @@ import { render, screen } from '@testing-library/react'
 import BookBorrowingsPage from '@/app/(home)/books/[id]/page'
 import { BACKEND_URL } from '@/lib/config'
 
+jest.mock('@/app/(home)/books/[id]/due-cell', () => ({
+  DueCell: ({ dueAt }: { dueAt: string }) => <span data-testid="due-cell">{dueAt}</span>,
+}))
+
+
 jest.mock('@/app/(home)/books/[id]/return-button', () => ({
   ReturnButton: ({ borrowingId }: { borrowingId: number }) => (
     <button data-testid="return-button" data-borrowing-id={borrowingId}>Return</button>
