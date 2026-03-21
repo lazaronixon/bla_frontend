@@ -15,8 +15,8 @@ describe('NavItems', () => {
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument()
   })
 
-  it('does not render a Books link', () => {
+  it('renders the Books link', () => {
     render(<NavItems />)
-    expect(screen.queryByRole('link', { name: /books/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /books/i })).toBeInTheDocument()
   })
 })

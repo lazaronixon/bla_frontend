@@ -65,7 +65,7 @@ describe('BookActionsMenu', () => {
   it('navigates to the book page when Show is clicked', () => {
     render(<BookActionsMenu book={book} />)
     fireEvent.click(screen.getByText('Show'))
-    expect(mockPush).toHaveBeenCalledWith('/books/1')
+    expect(mockPush).toHaveBeenCalledWith('/librarian/books/1')
   })
 
   it('opens the edit dialog when Edit is clicked', () => {
