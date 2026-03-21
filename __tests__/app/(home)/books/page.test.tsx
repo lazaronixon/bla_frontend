@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import BooksPage from '@/app/(dashboard)/books/page'
+import BooksPage from '@/app/(home)/books/page'
 import { BACKEND_URL } from '@/lib/config'
 
 jest.mock('next/navigation', () => ({
@@ -12,13 +12,13 @@ jest.mock('@/lib/session', () => ({
   getSession: jest.fn(),
 }))
 
-jest.mock('@/app/(dashboard)/books/books-toolbar', () => ({
+jest.mock('@/app/(home)/books/books-toolbar', () => ({
   BooksToolbar: ({ initialQuery }: { initialQuery?: string }) => (
     <div data-testid="books-toolbar" data-query={initialQuery ?? ''} />
   ),
 }))
 
-jest.mock('@/app/(dashboard)/books/book-actions-menu', () => ({
+jest.mock('@/app/(home)/books/book-actions-menu', () => ({
   BookActionsMenu: ({ book }: { book: { id: number } }) => (
     <div data-testid="book-actions-menu" data-book-id={book.id} />
   ),

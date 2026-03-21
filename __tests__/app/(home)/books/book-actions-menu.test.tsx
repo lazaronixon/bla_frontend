@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { BookActionsMenu } from '@/app/(dashboard)/books/book-actions-menu'
+import { BookActionsMenu } from '@/app/(home)/books/book-actions-menu'
 
 const mockPush = jest.fn()
 const mockRefresh = jest.fn()
@@ -12,7 +12,7 @@ jest.mock('@/app/actions/books', () => ({
   deleteBook: jest.fn(),
 }))
 
-jest.mock('@/app/(dashboard)/books/edit/edit-book-form', () => ({
+jest.mock('@/app/(home)/books/edit/edit-book-form', () => ({
   EditBookForm: ({ onSuccess }: { onSuccess?: () => void }) => (
     <div data-testid="edit-book-form">
       <button onClick={onSuccess}>Save</button>

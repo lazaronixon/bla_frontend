@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react'
-import DashboardLayout from '@/app/(dashboard)/layout'
+import DashboardLayout from '@/app/(home)/layout'
 
 jest.mock('@/lib/session', () => ({ getSession: jest.fn().mockResolvedValue(null) }))
 jest.mock('@/lib/config', () => ({ BACKEND_URL: 'http://localhost:3000' }))
 jest.mock('@/app/actions/auth', () => ({ signOut: jest.fn() }))
-jest.mock('@/app/(dashboard)/nav-items', () => ({
+jest.mock('@/app/(home)/nav-items', () => ({
   NavItems: ({ isLibrarian }: { isLibrarian: boolean }) => <nav data-testid="nav-items" data-librarian={isLibrarian} />,
 }))
 

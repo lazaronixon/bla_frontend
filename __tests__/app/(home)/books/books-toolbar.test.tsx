@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import { BooksToolbar } from '@/app/(dashboard)/books/books-toolbar'
+import { BooksToolbar } from '@/app/(home)/books/books-toolbar'
 
 const mockReplace = jest.fn()
 
@@ -7,7 +7,7 @@ jest.mock('next/navigation', () => ({
   useRouter: () => ({ replace: mockReplace }),
 }))
 
-jest.mock('@/app/(dashboard)/books/new/new-book-form', () => ({
+jest.mock('@/app/(home)/books/new/new-book-form', () => ({
   NewBookForm: () => <div data-testid="new-book-form" />,
 }))
 

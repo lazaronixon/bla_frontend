@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { EditBookButton } from '@/app/(dashboard)/books/edit-book-button'
+import { EditBookButton } from '@/app/(home)/books/edit-book-button'
 
 const mockRefresh = jest.fn()
 
@@ -7,7 +7,7 @@ jest.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: mockRefresh }),
 }))
 
-jest.mock('@/app/(dashboard)/books/edit/edit-book-form', () => ({
+jest.mock('@/app/(home)/books/edit/edit-book-form', () => ({
   EditBookForm: ({ onSuccess }: { onSuccess?: () => void }) => (
     <div data-testid="edit-book-form">
       <button onClick={onSuccess}>submit</button>

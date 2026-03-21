@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { DeleteBookButton } from '@/app/(dashboard)/books/delete-book-button'
+import { DeleteBookButton } from '@/app/(home)/books/delete-book-button'
 
 const mockRefresh = jest.fn()
 

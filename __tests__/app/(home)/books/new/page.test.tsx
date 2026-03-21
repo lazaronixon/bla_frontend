@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import NewBookPage from '@/app/(dashboard)/books/new/page'
+import NewBookPage from '@/app/(home)/books/new/page'
 
 jest.mock('next/navigation', () => ({
   redirect: jest.fn((url: string) => {
@@ -11,7 +11,7 @@ jest.mock('@/lib/session', () => ({
   getSession: jest.fn(),
 }))
 
-jest.mock('@/app/(dashboard)/books/new/new-book-form', () => ({
+jest.mock('@/app/(home)/books/new/new-book-form', () => ({
   NewBookForm: () => <div data-testid="new-book-form" />,
 }))
 

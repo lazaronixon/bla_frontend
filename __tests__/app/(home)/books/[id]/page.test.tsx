@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import BookBorrowingsPage from '@/app/(dashboard)/books/[id]/page'
+import BookBorrowingsPage from '@/app/(home)/books/[id]/page'
 import { BACKEND_URL } from '@/lib/config'
 
 jest.mock('next/navigation', () => ({
