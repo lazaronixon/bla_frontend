@@ -1,5 +1,9 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/session'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { SearchIcon, XIcon } from 'lucide-react'
+import Link from 'next/link'
 import {
   Table,
   TableBody,
@@ -18,8 +22,10 @@ type Book = {
   copies: number
 }
 
-async function getBooks(token: string): Promise<Book[]> {
-  const res = await fetch('http://localhost:3000/books', {
+async function getBooks(token: string, q?: string): Promise<Book[]> {
+  const url = new URL('http://localhost:3000/books')
+  if (q) url.searchParams.set('q', q)
+  const res = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
   })
   if (!res.ok) return []
@@ -34,18 +40,39 @@ async function getCurrentUser(token: string) {
   return res.json()
 }
 
-export default async function BooksPage() {
+export default async function BooksPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
   const token = await getSession()
   if (!token) redirect('/sign-in')
 
   const user = await getCurrentUser(token)
   if (user?.role !== 'librarian') redirect('/')
 
-  const books = await getBooks(token)
+  const { q } = await searchParams
+  const query = Array.isArray(q) ? q[0] : q
+  const books = await getBooks(token, query)
 
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold tracking-tight">Books</h1>
+      <form method="get" className="flex gap-2">
+        <Input name="q" placeholder="Search by title, author, genre…" defaultValue={query ?? ''} className="flex-1" />
+        {query && (
+          <Button variant="ghost" asChild>
+            <Link href="/books">
+              <XIcon data-icon="inline-start" />
+              Clear
+            </Link>
+          </Button>
+        )}
+        <Button type="submit" variant="outline">
+          <SearchIcon data-icon="inline-start" />
+          Search
+        </Button>
+      </form>
       <Table>
         <TableHeader>
           <TableRow>
