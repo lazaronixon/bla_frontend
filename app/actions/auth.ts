@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { createSession, deleteSession } from '@/lib/session'
+import { BACKEND_URL } from '@/lib/config'
 
 export type SignInState = { error?: string } | undefined
 export type SignUpState = { error?: string } | undefined
@@ -13,7 +14,7 @@ export async function signIn(
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
-  const response = await fetch('http://localhost:3000/sign_in', {
+  const response = await fetch(`${BACKEND_URL}/sign_in`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email_address: email, password }),
@@ -40,7 +41,7 @@ export async function signUp(
   const password = formData.get('password') as string
   const passwordConfirmation = formData.get('password_confirmation') as string
 
-  const response = await fetch('http://localhost:3000/sign_up', {
+  const response = await fetch(`${BACKEND_URL}/sign_up`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

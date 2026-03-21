@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/session'
+import { BACKEND_URL } from '@/lib/config'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { SearchIcon, XIcon } from 'lucide-react'
@@ -23,7 +24,7 @@ type Book = {
 }
 
 async function getBooks(token: string, q?: string): Promise<Book[]> {
-  const url = new URL('http://localhost:3000/books')
+  const url = new URL(`${BACKEND_URL}/books`)
   if (q) url.searchParams.set('q', q)
   const res = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
@@ -33,7 +34,7 @@ async function getBooks(token: string, q?: string): Promise<Book[]> {
 }
 
 async function getCurrentUser(token: string) {
-  const res = await fetch('http://localhost:3000/my/user', {
+  const res = await fetch('${BACKEND_URL}/my/user', {
     headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
   })
   if (!res.ok) return null

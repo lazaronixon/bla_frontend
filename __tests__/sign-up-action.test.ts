@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 import { signUp } from '@/app/actions/auth'
+import { BACKEND_URL } from '@/lib/config'
 
 jest.mock('next/navigation', () => ({
   redirect: jest.fn((url: string) => {
@@ -88,7 +89,7 @@ describe('signUp', () => {
     ).rejects.toThrow('NEXT_REDIRECT:/sign-in')
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://localhost:3000/sign_up',
+      `${BACKEND_URL}/sign_up`,
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify({

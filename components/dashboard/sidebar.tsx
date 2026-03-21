@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { signOut } from '@/app/actions/auth'
 import { getSession } from '@/lib/session'
+import { BACKEND_URL } from '@/lib/config'
 
 async function getCurrentUser() {
   const token = await getSession()
   if (!token) return null
-  const res = await fetch('http://localhost:3000/my/user', {
+  const res = await fetch(`${BACKEND_URL}/my/user`, {
     headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
   })
   if (!res.ok) return null
