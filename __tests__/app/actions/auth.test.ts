@@ -78,6 +78,15 @@ describe('signUp', () => {
     const result = await signUp(undefined, makeFormData(signUpData))
     expect(result).toEqual({ error: 'Something went wrong. Please try again.' })
   })
+
+  it('posts to the correct endpoint with correct body', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true })
+    await expect(signUp(undefined, makeFormData({ email: 'a@b.com', password: 'pass', password_confirmation: 'pass' }))).rejects.toThrow('NEXT_REDIRECT:/sign-in')
+    expect(global.fetch).toHaveBeenCalledWith(`${BACKEND_URL}/sign_up`, expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({ email_address: 'a@b.com', password: 'pass', password_confirmation: 'pass' }),
+    }))
+  })
 })
 
 describe('signOut', () => {

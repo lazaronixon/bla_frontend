@@ -36,8 +36,7 @@ describe('NewBookForm', () => {
   it('disables button and shows loading text while pending', () => {
     mockUseActionState.mockReturnValue([undefined, jest.fn(), true])
     render(<NewBookForm />)
-    const button = screen.getByRole('button', { name: /adding/i })
-    expect(button).toBeDisabled()
+    expect(screen.getByRole('button', { name: /adding/i })).toBeDisabled()
   })
 
   it('calls toast.error when state has an error', () => {
