@@ -24,6 +24,12 @@ jest.mock('@/app/(dashboard)/books/edit-book-button', () => ({
   ),
 }))
 
+jest.mock('@/app/(dashboard)/books/delete-book-button', () => ({
+  DeleteBookButton: ({ id }: { id: number }) => (
+    <div data-testid="delete-book-button" data-book-id={id} />
+  ),
+}))
+
 import { getSession } from '@/lib/session'
 
 const mockGetSession = getSession as jest.Mock

@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { BookOpenIcon, LayoutDashboardIcon, LibraryIcon } from 'lucide-react'
+import { LibraryIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { signOut } from '@/app/actions/auth'
 import { getSession } from '@/lib/session'
@@ -12,12 +11,10 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarProvider,
   SidebarSeparator,
 } from '@/components/ui/sidebar'
+import { NavItems } from './nav-items'
 
 async function getCurrentUser() {
   const token = await getSession()
@@ -35,12 +32,6 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   const user = await getCurrentUser()
-  const navItems = [
-    { href: '/', label: 'Dashboard', icon: LayoutDashboardIcon },
-    ...(user?.role === 'librarian'
-      ? [{ href: '/books', label: 'Books', icon: BookOpenIcon }]
-      : []),
-  ]
 
   return (
     <SidebarProvider className="h-svh">
@@ -55,18 +46,7 @@ export default async function DashboardLayout({
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupContent>
-              <SidebarMenu>
-                {navItems.map(({ href, label, icon: Icon }) => (
-                  <SidebarMenuItem key={href}>
-                    <SidebarMenuButton asChild>
-                      <Link href={href}>
-                        <Icon />
-                        <span>{label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
+              <NavItems isLibrarian={user?.role === 'librarian'} />
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>

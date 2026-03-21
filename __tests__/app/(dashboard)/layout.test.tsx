@@ -4,6 +4,9 @@ import DashboardLayout from '@/app/(dashboard)/layout'
 jest.mock('@/lib/session', () => ({ getSession: jest.fn().mockResolvedValue(null) }))
 jest.mock('@/lib/config', () => ({ BACKEND_URL: 'http://localhost:3000' }))
 jest.mock('@/app/actions/auth', () => ({ signOut: jest.fn() }))
+jest.mock('@/app/(dashboard)/nav-items', () => ({
+  NavItems: ({ isLibrarian }: { isLibrarian: boolean }) => <nav data-testid="nav-items" data-librarian={isLibrarian} />,
+}))
 
 jest.mock('@/components/ui/sidebar', () => ({
   Sidebar: ({ children }: { children: React.ReactNode }) => <div data-testid="sidebar">{children}</div>,
