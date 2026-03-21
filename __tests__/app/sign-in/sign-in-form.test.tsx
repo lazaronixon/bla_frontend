@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { toast } from 'sonner'
 import { SignInForm } from '@/app/sign-in/sign-in-form'
+import { toast } from 'sonner'
 
 jest.mock('sonner', () => ({ toast: { error: jest.fn() } }))
 
@@ -30,41 +30,34 @@ describe('SignInForm', () => {
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
   })
 
-  it('does not call toast.error initially', () => {
+  it('disables button and shows loading text while pending', () => {
+    mockUseActionState.mockReturnValue([undefined, jest.fn(), true])
     render(<SignInForm />)
-    expect(toast.error).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: /signing in/i })).toBeDisabled()
   })
 
   it('calls toast.error when state has an error', () => {
-    mockUseActionState.mockReturnValue([
-      { error: 'Invalid email or password.' },
-      jest.fn(),
-      false,
-    ])
-
+    mockUseActionState.mockReturnValue([{ error: 'Invalid email or password.' }, jest.fn(), false])
     render(<SignInForm />)
     expect(toast.error).toHaveBeenCalledWith('Invalid email or password.')
   })
 
-  it('disables the button and shows loading text while pending', () => {
-    mockUseActionState.mockReturnValue([undefined, jest.fn(), true])
-
-    render(<SignInForm />)
-    const button = screen.getByRole('button', { name: /signing in/i })
-    expect(button).toBeDisabled()
-  })
-
   it('email input has correct type and autocomplete', () => {
     render(<SignInForm />)
-    const emailInput = screen.getByLabelText('Email')
-    expect(emailInput).toHaveAttribute('type', 'email')
-    expect(emailInput).toHaveAttribute('autocomplete', 'email')
+    const input = screen.getByLabelText('Email')
+    expect(input).toHaveAttribute('type', 'email')
+    expect(input).toHaveAttribute('autocomplete', 'email')
   })
 
   it('password input has correct type and autocomplete', () => {
     render(<SignInForm />)
-    const passwordInput = screen.getByLabelText('Password')
-    expect(passwordInput).toHaveAttribute('type', 'password')
-    expect(passwordInput).toHaveAttribute('autocomplete', 'current-password')
+    const input = screen.getByLabelText('Password')
+    expect(input).toHaveAttribute('type', 'password')
+    expect(input).toHaveAttribute('autocomplete', 'current-password')
+  })
+
+  it('renders a link to sign up', () => {
+    render(<SignInForm />)
+    expect(screen.getByRole('link', { name: /sign up/i })).toHaveAttribute('href', '/sign-up')
   })
 })

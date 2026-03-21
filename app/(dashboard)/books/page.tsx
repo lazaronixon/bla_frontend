@@ -1,10 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/session'
 import { BACKEND_URL } from '@/lib/config'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { SearchIcon, XIcon } from 'lucide-react'
-import Link from 'next/link'
 import {
   Table,
   TableBody,
@@ -13,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { BooksToolbar } from './books-toolbar'
 
 type Book = {
   id: number
@@ -34,7 +31,7 @@ async function getBooks(token: string, q?: string): Promise<Book[]> {
 }
 
 async function getCurrentUser(token: string) {
-  const res = await fetch('${BACKEND_URL}/my/user', {
+  const res = await fetch(`${BACKEND_URL}/my/user`, {
     headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
   })
   if (!res.ok) return null
@@ -59,21 +56,7 @@ export default async function BooksPage({
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold tracking-tight">Books</h1>
-      <form method="get" className="flex gap-2">
-        <Input name="q" placeholder="Search by title, author, genre…" defaultValue={query ?? ''} className="flex-1" />
-        {query && (
-          <Button variant="ghost" asChild>
-            <Link href="/books">
-              <XIcon data-icon="inline-start" />
-              Clear
-            </Link>
-          </Button>
-        )}
-        <Button type="submit" variant="outline">
-          <SearchIcon data-icon="inline-start" />
-          Search
-        </Button>
-      </form>
+      <BooksToolbar initialQuery={query} />
       <Table>
         <TableHeader>
           <TableRow>

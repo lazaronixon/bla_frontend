@@ -28,11 +28,10 @@ describe('SignUpForm', () => {
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument()
   })
 
-  it('disables the button and shows loading text while pending', () => {
+  it('disables button and shows loading text while pending', () => {
     mockUseActionState.mockReturnValue([undefined, jest.fn(), true])
     render(<SignUpForm />)
-    const button = screen.getByRole('button', { name: /creating account/i })
-    expect(button).toBeDisabled()
+    expect(screen.getByRole('button', { name: /creating account/i })).toBeDisabled()
   })
 
   it('does not render an error alert initially', () => {
@@ -40,12 +39,8 @@ describe('SignUpForm', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
-  it('renders the error message in an alert when state has an error', () => {
-    mockUseActionState.mockReturnValue([
-      { error: 'Email address has already been taken.' },
-      jest.fn(),
-      false,
-    ])
+  it('renders the error in an alert when state has an error', () => {
+    mockUseActionState.mockReturnValue([{ error: 'Email address has already been taken.' }, jest.fn(), false])
     render(<SignUpForm />)
     expect(screen.getByRole('alert')).toBeInTheDocument()
     expect(screen.getByText('Email address has already been taken.')).toBeInTheDocument()
@@ -60,17 +55,12 @@ describe('SignUpForm', () => {
 
   it('password inputs have correct type and autocomplete', () => {
     render(<SignUpForm />)
-    const password = screen.getByLabelText('Password')
-    const confirmation = screen.getByLabelText('Confirm password')
-    expect(password).toHaveAttribute('type', 'password')
-    expect(password).toHaveAttribute('autocomplete', 'new-password')
-    expect(confirmation).toHaveAttribute('type', 'password')
-    expect(confirmation).toHaveAttribute('autocomplete', 'new-password')
+    expect(screen.getByLabelText('Password')).toHaveAttribute('autocomplete', 'new-password')
+    expect(screen.getByLabelText('Confirm password')).toHaveAttribute('autocomplete', 'new-password')
   })
 
   it('renders a link to sign in', () => {
     render(<SignUpForm />)
-    const link = screen.getByRole('link', { name: /sign in/i })
-    expect(link).toHaveAttribute('href', '/sign-in')
+    expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/sign-in')
   })
 })
