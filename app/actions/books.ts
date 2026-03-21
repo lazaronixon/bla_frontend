@@ -74,6 +74,34 @@ export async function updateBook(
   return { success: true }
 }
 
+export type ReturnBorrowingState = { error?: string; success?: boolean } | undefined
+
+export async function returnBorrowing(
+  bookId: number,
+  borrowingId: number
+): Promise<ReturnBorrowingState> {
+  const token = await getSession()
+  if (!token) redirect('/sign-in')
+
+  const res = await fetch(`${BACKEND_URL}/books/${bookId}/borrowings/${borrowingId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ returned_at: new Date().toISOString() }),
+  })
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    const messages = data.errors as string[] | undefined
+    return { error: messages?.join('. ') ?? 'Something went wrong.' }
+  }
+
+  revalidatePath(`/books/${bookId}`)
+  return { success: true }
+}
+
 export async function deleteBook(id: number): Promise<DeleteBookState> {
   const token = await getSession()
   if (!token) redirect('/sign-in')

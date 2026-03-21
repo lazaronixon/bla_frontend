@@ -1,4 +1,4 @@
-import { createBook, updateBook } from '@/app/actions/books'
+import { createBook, updateBook, returnBorrowing } from '@/app/actions/books'
 import { BACKEND_URL } from '@/lib/config'
 
 jest.mock('next/navigation', () => ({
@@ -117,6 +117,62 @@ describe('updateBook', () => {
       json: async () => ({}),
     })
     const result = await updateBook(1, undefined, makeFormData(validBook))
+    expect(result).toEqual({ error: 'Something went wrong.' })
+  })
+})
+
+describe('returnBorrowing', () => {
+  beforeEach(() => {
+    mockGetSession.mockResolvedValue('test-token')
+  })
+
+  it('redirects to /sign-in when no session', async () => {
+    mockGetSession.mockResolvedValue(undefined)
+    await expect(returnBorrowing(1, 10)).rejects.toThrow('NEXT_REDIRECT:/sign-in')
+  })
+
+  it('patches the correct borrowing URL with auth header', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true })
+    await returnBorrowing(3, 42)
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${BACKEND_URL}/books/3/borrowings/42`,
+      expect.objectContaining({
+        method: 'PATCH',
+        headers: expect.objectContaining({ Authorization: 'Bearer test-token' }),
+      })
+    )
+  })
+
+  it('sends returned_at in the request body', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true })
+    await returnBorrowing(1, 10)
+    const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body)
+    expect(body).toHaveProperty('returned_at')
+    expect(typeof body.returned_at).toBe('string')
+  })
+
+  it('returns success and revalidates the book path', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true })
+    const result = await returnBorrowing(3, 10)
+    expect(result).toEqual({ success: true })
+    expect(mockRevalidatePath).toHaveBeenCalledWith('/books/3')
+  })
+
+  it('returns error messages from API on failure', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ errors: ['Already returned'] }),
+    })
+    const result = await returnBorrowing(1, 10)
+    expect(result).toEqual({ error: 'Already returned' })
+  })
+
+  it('returns generic error when no errors in body', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({}),
+    })
+    const result = await returnBorrowing(1, 10)
     expect(result).toEqual({ error: 'Something went wrong.' })
   })
 })

@@ -9,6 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { LocalDateTime } from './local-datetime'
+import { ReturnButton } from './return-button'
 
 type Book = {
   id: number
@@ -58,13 +60,6 @@ async function getCurrentUser(token: string) {
   return res.json()
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
 
 export default async function BookBorrowingsPage({
   params,
@@ -113,12 +108,13 @@ export default async function BookBorrowingsPage({
             <TableHead>Borrowed on</TableHead>
             <TableHead>Due</TableHead>
             <TableHead>Returned</TableHead>
+            <TableHead />
           </TableRow>
         </TableHeader>
         <TableBody>
           {borrowings.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground">
+              <TableCell colSpan={5} className="text-center text-muted-foreground">
                 No borrowings yet.
               </TableCell>
             </TableRow>
@@ -126,9 +122,12 @@ export default async function BookBorrowingsPage({
             borrowings.map((b) => (
               <TableRow key={b.id}>
                 <TableCell className="font-medium">{b.user.email_address}</TableCell>
-                <TableCell>{formatDate(b.created_at)}</TableCell>
-                <TableCell>{formatDate(b.due_at)}</TableCell>
-                <TableCell>{b.returned_at ? formatDate(b.returned_at) : '—'}</TableCell>
+                <TableCell><LocalDateTime iso={b.created_at} /></TableCell>
+                <TableCell><LocalDateTime iso={b.due_at} /></TableCell>
+                <TableCell>{b.returned_at ? <LocalDateTime iso={b.returned_at} /> : '—'}</TableCell>
+                <TableCell className="text-right">
+                  {!b.returned_at && <ReturnButton bookId={book.id} borrowingId={b.id} />}
+                </TableCell>
               </TableRow>
             ))
           )}

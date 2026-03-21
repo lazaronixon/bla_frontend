@@ -2,6 +2,16 @@ import { render, screen } from '@testing-library/react'
 import BookBorrowingsPage from '@/app/(home)/books/[id]/page'
 import { BACKEND_URL } from '@/lib/config'
 
+jest.mock('@/app/(home)/books/[id]/local-datetime', () => ({
+  LocalDateTime: ({ iso }: { iso: string }) => <span data-testid="local-datetime">{iso}</span>,
+}))
+
+jest.mock('@/app/(home)/books/[id]/return-button', () => ({
+  ReturnButton: ({ borrowingId }: { borrowingId: number }) => (
+    <button data-testid="return-button" data-borrowing-id={borrowingId}>Return</button>
+  ),
+}))
+
 jest.mock('next/navigation', () => ({
   redirect: jest.fn((url: string) => {
     throw new Error(`NEXT_REDIRECT:${url}`)
@@ -145,5 +155,21 @@ describe('BookBorrowingsPage', () => {
       `${BACKEND_URL}/books/42/borrowings`,
       expect.any(Object)
     )
+  })
+
+  it('renders a return button only for unreturned borrowings', async () => {
+    mockFetch(librarianUser)
+    await renderPage()
+    const buttons = screen.getAllByTestId('return-button')
+    expect(buttons).toHaveLength(1)
+    expect(buttons[0]).toHaveAttribute('data-borrowing-id', '10')
+  })
+
+  it('does not render a return button for already returned borrowings', async () => {
+    mockFetch(librarianUser)
+    await renderPage()
+    const buttons = screen.getAllByTestId('return-button')
+    const borrowingIds = buttons.map((b) => b.getAttribute('data-borrowing-id'))
+    expect(borrowingIds).not.toContain('11')
   })
 })
