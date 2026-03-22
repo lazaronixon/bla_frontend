@@ -34,6 +34,15 @@ export async function getBorrowings(id: string): Promise<Borrowing[]> {
   return res.json()
 }
 
+export async function getBorrowedBooks(): Promise<Borrowing[]> {
+  const token = await getSession()
+  const res = await fetch(`${BACKEND_URL}/books/borrowed`, {
+    headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) return []
+  return res.json()
+}
+
 export async function getDashboardStats(): Promise<{ total_books: number; total_borrowed: number }> {
   const token = await getSession()
   const res = await fetch(`${BACKEND_URL}/books/total`, {
