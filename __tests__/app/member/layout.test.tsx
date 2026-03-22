@@ -12,13 +12,8 @@ jest.mock('@/components/ui/sidebar', () => ({
   SidebarTrigger: () => null,
 }))
 
-jest.mock('@/components/ui/breadcrumb', () => ({
-  Breadcrumb: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  BreadcrumbItem: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  BreadcrumbLink: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  BreadcrumbList: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  BreadcrumbPage: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  BreadcrumbSeparator: () => null,
+jest.mock('@/components/app-breadcrumb', () => ({
+  AppBreadcrumb: () => <nav data-testid="breadcrumb" />,
 }))
 
 jest.mock('@/components/ui/separator', () => ({

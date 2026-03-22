@@ -9,14 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
 import { formatLocalDateTime } from '@/lib/utils'
 import { ReturnButton } from './return-button'
 import { DueCell } from './due-cell'
@@ -36,19 +28,7 @@ export default async function BookBorrowingsPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/librarian/books">Books</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{book.title}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <div>
-        <p className="text-sm text-muted-foreground">#{book.id}</p>
         <h1 className="text-2xl font-semibold tracking-tight">{book.title}</h1>
         <p className="text-muted-foreground">{book.author}</p>
       </div>
