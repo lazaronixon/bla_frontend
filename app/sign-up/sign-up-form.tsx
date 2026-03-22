@@ -23,10 +23,12 @@ export function SignUpForm() {
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-sm">
-      {state?.error && (
+      {state?.errors && (
         <Alert variant="destructive">
           <TriangleAlertIcon />
-          <AlertDescription>{state.error}</AlertDescription>
+          <AlertDescription>
+            {state.errors.map((e, i) => <div key={i}>{e}</div>)}
+          </AlertDescription>
         </Alert>
       )}
       <Card>
@@ -48,6 +50,7 @@ export function SignUpForm() {
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
+                defaultValue={state?.values?.email}
               />
             </Field>
             <Field>

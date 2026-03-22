@@ -82,7 +82,7 @@ describe('signUp', () => {
       json: async () => ({ email_address: ['has already been taken'] }),
     })
     const result = await signUp(undefined, makeFormData(signUpData))
-    expect(result).toEqual({ error: 'Email address has already been taken' })
+    expect(result).toEqual({ errors: ['Email address has already been taken'], values: { email: 'a@b.com' } })
   })
 
   it('returns generic error when body is unparseable', async () => {
@@ -91,7 +91,7 @@ describe('signUp', () => {
       json: async () => { throw new Error() },
     })
     const result = await signUp(undefined, makeFormData(signUpData))
-    expect(result).toEqual({ error: 'Something went wrong. Please try again.' })
+    expect(result).toEqual({ errors: ['Something went wrong. Please try again.'], values: { email: 'a@b.com' } })
   })
 
   it('posts to the correct endpoint with correct body', async () => {

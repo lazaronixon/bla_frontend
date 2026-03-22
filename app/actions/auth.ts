@@ -5,7 +5,7 @@ import { createSession, deleteSession, setRoleCookie, deleteRoleCookie } from '@
 import { BACKEND_URL } from '@/lib/config'
 
 export type SignInState = { error?: string } | undefined
-export type SignUpState = { error?: string } | undefined
+export type SignUpState = { errors?: string[]; values?: { email?: string } } | undefined
 
 export async function signIn(
   _state: SignInState,
@@ -64,7 +64,7 @@ export async function signUp(
       const capitalized = label.charAt(0).toUpperCase() + label.slice(1)
       return (msgs as string[]).map((msg) => `${capitalized} ${msg}`)
     })
-    return { error: messages.length > 0 ? messages.join('. ') : 'Something went wrong. Please try again.' }
+    return { errors: messages.length > 0 ? messages : ['Something went wrong. Please try again.'], values: { email } }
   }
 
   redirect('/sign-in')

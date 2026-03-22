@@ -39,11 +39,12 @@ describe('SignUpForm', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
-  it('renders the error in an alert when state has an error', () => {
-    mockUseActionState.mockReturnValue([{ error: 'Email address has already been taken.' }, jest.fn(), false])
+  it('renders errors in an alert when state has errors', () => {
+    mockUseActionState.mockReturnValue([{ errors: ['Email address has already been taken', 'Password is too short'] }, jest.fn(), false])
     render(<SignUpForm />)
     expect(screen.getByRole('alert')).toBeInTheDocument()
-    expect(screen.getByText('Email address has already been taken.')).toBeInTheDocument()
+    expect(screen.getByText('Email address has already been taken')).toBeInTheDocument()
+    expect(screen.getByText('Password is too short')).toBeInTheDocument()
   })
 
   it('email input has correct type and autocomplete', () => {
