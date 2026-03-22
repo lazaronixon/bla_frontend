@@ -47,11 +47,6 @@ describe('DashboardPage', () => {
     expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
   })
 
-  it('renders the welcome message', async () => {
-    await renderPage()
-    expect(screen.getByText('Welcome to BLA Library.')).toBeInTheDocument()
-  })
-
   it('renders the borrowings heading', async () => {
     await renderPage()
     expect(screen.getByRole('heading', { name: 'My Borrowings' })).toBeInTheDocument()
@@ -83,5 +78,22 @@ describe('DashboardPage', () => {
   it('renders a due cell for each borrowing', async () => {
     await renderPage()
     expect(screen.getAllByTestId('due-cell')).toHaveLength(2)
+  })
+
+  it('renders footer with total borrowing count', async () => {
+    await renderPage()
+    expect(screen.getByText('2 borrowings')).toBeInTheDocument()
+  })
+
+  it('renders singular borrowing count in footer', async () => {
+    mockGetBorrowedBooks.mockResolvedValue([borrowings[0]])
+    await renderPage()
+    expect(screen.getByText('1 borrowing')).toBeInTheDocument()
+  })
+
+  it('renders # prefixed book IDs for each borrowing', async () => {
+    await renderPage()
+    expect(screen.getByText('#1')).toBeInTheDocument()
+    expect(screen.getByText('#2')).toBeInTheDocument()
   })
 })

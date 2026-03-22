@@ -48,6 +48,7 @@ export default async function BookBorrowingsPage({
         </BreadcrumbList>
       </Breadcrumb>
       <div>
+        <p className="text-sm text-muted-foreground">#{book.id}</p>
         <h1 className="text-2xl font-semibold tracking-tight">{book.title}</h1>
         <p className="text-muted-foreground">{book.author}</p>
       </div>
@@ -69,6 +70,7 @@ export default async function BookBorrowingsPage({
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>ID</TableHead>
             <TableHead>Member</TableHead>
             <TableHead className="text-right">Borrowed on</TableHead>
             <TableHead className="text-right">Due</TableHead>
@@ -79,13 +81,14 @@ export default async function BookBorrowingsPage({
         <TableBody>
           {borrowings.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center text-muted-foreground">
+              <TableCell colSpan={6} className="text-center text-muted-foreground">
                 No borrowings yet.
               </TableCell>
             </TableRow>
           ) : (
             borrowings.map((b) => (
               <TableRow key={b.id}>
+                <TableCell>#{b.user.id}</TableCell>
                 <TableCell className="font-medium">{b.user.email_address}</TableCell>
                 <TableCell className="text-right">{formatLocalDateTime(b.created_at)}</TableCell>
                 <TableCell className="text-right"><DueCell dueAt={b.due_at} /></TableCell>
@@ -100,7 +103,7 @@ export default async function BookBorrowingsPage({
         <TableFooter>
           <TableRow>
             <TableCell className="font-medium">Total</TableCell>
-            <TableCell colSpan={3} />
+            <TableCell colSpan={4} />
             <TableCell className="text-right font-medium">{borrowings.length} {borrowings.length === 1 ? 'borrowing' : 'borrowings'}</TableCell>
           </TableRow>
         </TableFooter>

@@ -3,16 +3,8 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { EllipsisIcon, BookOpenIcon, PencilIcon, Trash2Icon, LoaderCircleIcon } from 'lucide-react'
+import { PencilIcon, Trash2Icon, LoaderCircleIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import {
   Dialog,
   DialogContent,
@@ -46,37 +38,16 @@ export function BookActionsMenu({ book }: { book: Book }) {
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <EllipsisIcon />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuGroup>
-            <DropdownMenuItem className="py-2" onSelect={() => router.push(`/librarian/books/${book.id}`)}>
-              <BookOpenIcon data-icon="inline-start" />
-              Show
-            </DropdownMenuItem>
-            <DropdownMenuItem className="py-2" onSelect={() => setDialog('edit')}>
-              <PencilIcon data-icon="inline-start" />
-              Edit
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              className="py-2"
-              variant="destructive"
-              onSelect={() => setDialog('delete')}
-            >
-              <Trash2Icon data-icon="inline-start" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex items-center justify-end gap-1">
+        <Button variant="ghost" size="icon" onClick={() => setDialog('edit')}>
+          <PencilIcon />
+          <span className="sr-only">Edit</span>
+        </Button>
+        <Button variant="ghost" size="icon" onClick={() => setDialog('delete')}>
+          <Trash2Icon />
+          <span className="sr-only">Delete</span>
+        </Button>
+      </div>
 
       <Dialog open={dialog === 'edit'} onOpenChange={(open) => !open && setDialog(null)}>
         <DialogContent>

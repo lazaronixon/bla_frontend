@@ -11,6 +11,7 @@ export type BookUser = {
   id: number
   email_address: string
   role: string
+  created_at: string
 }
 
 export type Borrowing = {

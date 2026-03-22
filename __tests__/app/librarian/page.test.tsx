@@ -18,7 +18,7 @@ const dueToday = [
   { id: 1, due_at: '2026-03-21T12:00:00Z', returned_at: null, created_at: '2026-03-07T12:00:00Z', user: { id: 10, email_address: 'alice@example.com', role: 'member' }, book: { id: 5, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '978-0441013593', copies: 3 } },
 ]
 const overdueMembers = [
-  { id: 20, email_address: 'bob@example.com', role: 'member' },
+  { id: 20, email_address: 'bob@example.com', role: 'member', created_at: '2025-01-01T00:00:00Z' },
 ]
 
 function mockApi() {
@@ -77,5 +77,42 @@ describe('DashboardPage', () => {
     mockGetMembersWithOverdueBooks.mockResolvedValue([])
     await renderPage()
     expect(screen.getByText('No members with overdue books.')).toBeInTheDocument()
+  })
+
+  it('renders due today footer with total count', async () => {
+    await renderPage()
+    expect(screen.getByText('1 book')).toBeInTheDocument()
+  })
+
+  it('renders overdue members footer with total count', async () => {
+    await renderPage()
+    expect(screen.getByText('1 member')).toBeInTheDocument()
+  })
+
+  it('pluralizes due today footer when multiple books', async () => {
+    mockGetDueToday.mockResolvedValue([dueToday[0], { ...dueToday[0], id: 2 }])
+    await renderPage()
+    expect(screen.getByText('2 books')).toBeInTheDocument()
+  })
+
+  it('pluralizes overdue members footer when multiple members', async () => {
+    mockGetMembersWithOverdueBooks.mockResolvedValue([overdueMembers[0], { ...overdueMembers[0], id: 21 }])
+    await renderPage()
+    expect(screen.getByText('2 members')).toBeInTheDocument()
+  })
+
+  it('renders # prefixed book id in due today', async () => {
+    await renderPage()
+    expect(screen.getByText('#5')).toBeInTheDocument()
+  })
+
+  it('renders # prefixed member id in due today', async () => {
+    await renderPage()
+    expect(screen.getByText('#10')).toBeInTheDocument()
+  })
+
+  it('renders # prefixed member id in overdue members', async () => {
+    await renderPage()
+    expect(screen.getByText('#20')).toBeInTheDocument()
   })
 })

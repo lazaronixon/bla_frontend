@@ -27,6 +27,7 @@ export default async function BooksPage({
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>ID</TableHead>
             <TableHead>Title</TableHead>
             <TableHead>Author</TableHead>
             <TableHead>Genre</TableHead>
@@ -38,6 +39,7 @@ export default async function BooksPage({
         <TableBody>
           {books.map((book) => (
             <TableRow key={book.id}>
+              <TableCell>#{book.id}</TableCell>
               <TableCell className="font-medium">{book.title}</TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell>{book.genre}</TableCell>
@@ -52,7 +54,7 @@ export default async function BooksPage({
         <TableFooter>
           <TableRow>
             <TableCell className="font-medium">Total</TableCell>
-            <TableCell colSpan={3} />
+            <TableCell colSpan={4} />
             <TableCell className="text-right">{books.reduce((sum, book) => sum + book.copies, 0)}</TableCell>
             <TableCell className="text-right font-medium">{books.length} {books.length === 1 ? 'book' : 'books'}</TableCell>
           </TableRow>

@@ -82,4 +82,26 @@ describe('BooksPage', () => {
     expect(menus[0]).toHaveAttribute('data-book-id', '1')
     expect(menus[1]).toHaveAttribute('data-book-id', '2')
   })
+
+  it('renders footer with total copies', async () => {
+    await renderPage()
+    expect(screen.getByText('8')).toBeInTheDocument()
+  })
+
+  it('renders footer with total book count', async () => {
+    await renderPage()
+    expect(screen.getByText('2 books')).toBeInTheDocument()
+  })
+
+  it('renders singular book count in footer', async () => {
+    mockApi([books[0]])
+    await renderPage()
+    expect(screen.getByText('1 book')).toBeInTheDocument()
+  })
+
+  it('renders # prefixed book ids', async () => {
+    await renderPage()
+    expect(screen.getByText('#1')).toBeInTheDocument()
+    expect(screen.getByText('#2')).toBeInTheDocument()
+  })
 })

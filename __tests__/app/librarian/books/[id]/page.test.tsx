@@ -131,4 +131,15 @@ describe('BookBorrowingsPage', () => {
     const returned = buttons.find((b) => b.getAttribute('data-borrowing-id') === '11')
     expect(returned).toBeDisabled()
   })
+
+  it('renders footer with total borrowing count', async () => {
+    await renderPage()
+    expect(screen.getByText('2 borrowings')).toBeInTheDocument()
+  })
+
+  it('renders singular borrowing count in footer', async () => {
+    mockApi(book, [borrowings[0]])
+    await renderPage()
+    expect(screen.getByText('1 borrowing')).toBeInTheDocument()
+  })
 })
