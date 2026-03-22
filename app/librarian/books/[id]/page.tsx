@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { formatLocalDateTime } from '@/lib/utils'
 import { ReturnButton } from './return-button'
-import { DueCell } from './due-cell'
+import { DueCell } from '@/components/due-cell'
 
 export default async function BookBorrowingsPage({
   params,

@@ -20,7 +20,7 @@ export default async function Page() {
     <div className="flex flex-col gap-8">
       <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Books</CardTitle>

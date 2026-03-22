@@ -23,15 +23,7 @@ import {
 } from '@/components/ui/dialog'
 import { EditBookForm } from './edit/edit-book-form'
 import { deleteBook } from '@/app/actions/books'
-
-type Book = {
-  id: number
-  title: string
-  author: string
-  genre: string
-  isbn: string
-  copies: number
-}
+import type { Book } from '@/lib/types'
 
 type DialogState = 'edit' | 'delete' | null
 

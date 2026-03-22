@@ -2,14 +2,14 @@
 
 import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { createBook, type CreateBookState } from '@/app/actions/books'
+import { createBook, type ActionState } from '@/app/actions/books'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { LoaderCircleIcon } from 'lucide-react'
 
 export function NewBookForm({ onSuccess }: { onSuccess?: () => void }) {
-  const [state, action, pending] = useActionState<CreateBookState, FormData>(
+  const [state, action, pending] = useActionState<ActionState, FormData>(
     createBook,
     undefined
   )

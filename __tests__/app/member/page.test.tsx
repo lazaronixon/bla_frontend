@@ -5,7 +5,7 @@ jest.mock('@/app/actions/books', () => ({
   getBorrowedBooks: jest.fn(),
 }))
 
-jest.mock('@/app/librarian/books/[id]/due-cell', () => ({
+jest.mock('@/components/due-cell', () => ({
   DueCell: ({ dueAt }: { dueAt: string }) => <span data-testid="due-cell">{dueAt}</span>,
 }))
 

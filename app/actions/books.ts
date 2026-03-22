@@ -70,14 +70,19 @@ export async function getMembersWithOverdueBooks(): Promise<BookUser[]> {
   return res.json()
 }
 
-export type CreateBookState = { error?: string; success?: boolean } | undefined
-export type UpdateBookState = { error?: string; success?: boolean } | undefined
-export type DeleteBookState = { error?: string; success?: boolean } | undefined
+export type ActionState = { error?: string; success?: boolean } | undefined
+
+async function errorFrom(res: Response): Promise<ActionState> {
+  const data = await res.json().catch(() => ({}))
+  const messages = (data.errors ?? data.error) as string | string[] | undefined
+  const text = Array.isArray(messages) ? messages.join('. ') : messages
+  return { error: text ?? 'Something went wrong.' }
+}
 
 export async function createBook(
-  _state: CreateBookState,
+  _state: ActionState,
   formData: FormData
-): Promise<CreateBookState> {
+): Promise<ActionState> {
   const token = await getSession()
 
   const res = await fetch(`${BACKEND_URL}/books`, {
@@ -95,11 +100,7 @@ export async function createBook(
     }),
   })
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    const messages = data.errors as string[] | undefined
-    return { error: messages?.join('. ') ?? 'Something went wrong.' }
-  }
+  if (!res.ok) return errorFrom(res)
 
   revalidatePath('/librarian/books')
   return { success: true }
@@ -107,9 +108,9 @@ export async function createBook(
 
 export async function updateBook(
   id: number,
-  _state: UpdateBookState,
+  _state: ActionState,
   formData: FormData
-): Promise<UpdateBookState> {
+): Promise<ActionState> {
   const token = await getSession()
 
   const res = await fetch(`${BACKEND_URL}/books/${id}`, {
@@ -127,22 +128,16 @@ export async function updateBook(
     }),
   })
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    const messages = data.errors as string[] | undefined
-    return { error: messages?.join('. ') ?? 'Something went wrong.' }
-  }
+  if (!res.ok) return errorFrom(res)
 
   revalidatePath('/librarian/books')
   return { success: true }
 }
 
-export type ReturnBorrowingState = { error?: string; success?: boolean } | undefined
-
 export async function returnBorrowing(
   bookId: number,
   borrowingId: number
-): Promise<ReturnBorrowingState> {
+): Promise<ActionState> {
   const token = await getSession()
 
   const res = await fetch(`${BACKEND_URL}/books/${bookId}/borrowings/${borrowingId}`, {
@@ -154,19 +149,14 @@ export async function returnBorrowing(
     body: JSON.stringify({ returned_at: new Date().toISOString() }),
   })
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    const messages = data.errors as string[] | undefined
-    return { error: messages?.join('. ') ?? 'Something went wrong.' }
-  }
+  if (!res.ok) return errorFrom(res)
 
   revalidatePath(`/librarian/books/${bookId}`)
+  revalidatePath('/member')
   return { success: true }
 }
 
-export type CreateBorrowingState = { error?: string; success?: boolean } | undefined
-
-export async function createBorrowing(bookId: number): Promise<CreateBorrowingState> {
+export async function createBorrowing(bookId: number): Promise<ActionState> {
   const token = await getSession()
 
   const res = await fetch(`${BACKEND_URL}/books/${bookId}/borrowings`, {
@@ -177,17 +167,14 @@ export async function createBorrowing(bookId: number): Promise<CreateBorrowingSt
     },
   })
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    const message = data.error as string | undefined
-    return { error: message ?? 'Something went wrong.' }
-  }
+  if (!res.ok) return errorFrom(res)
 
   revalidatePath('/member/books')
+  revalidatePath('/member')
   return { success: true }
 }
 
-export async function deleteBook(id: number): Promise<DeleteBookState> {
+export async function deleteBook(id: number): Promise<ActionState> {
   const token = await getSession()
 
   const res = await fetch(`${BACKEND_URL}/books/${id}`, {
@@ -195,11 +182,7 @@ export async function deleteBook(id: number): Promise<DeleteBookState> {
     headers: { Authorization: `Bearer ${token}` },
   })
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    const messages = data.errors as string[] | undefined
-    return { error: messages?.join('. ') ?? 'Something went wrong.' }
-  }
+  if (!res.ok) return errorFrom(res)
 
   revalidatePath('/librarian/books')
   return { success: true }

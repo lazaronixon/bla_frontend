@@ -2,20 +2,12 @@
 
 import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { updateBook, type UpdateBookState } from '@/app/actions/books'
+import { updateBook, type ActionState } from '@/app/actions/books'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { LoaderCircleIcon } from 'lucide-react'
-
-type Book = {
-  id: number
-  title: string
-  author: string
-  genre: string
-  isbn: string
-  copies: number
-}
+import type { Book } from '@/lib/types'
 
 export function EditBookForm({
   book,
@@ -25,7 +17,7 @@ export function EditBookForm({
   onSuccess?: () => void
 }) {
   const boundAction = updateBook.bind(null, book.id)
-  const [state, action, pending] = useActionState<UpdateBookState, FormData>(
+  const [state, action, pending] = useActionState<ActionState, FormData>(
     boundAction,
     undefined
   )

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { DueCell } from '@/app/librarian/books/[id]/due-cell'
+import { DueCell } from '@/components/due-cell'
 
 describe('DueCell', () => {
   it('renders the formatted due date', () => {
