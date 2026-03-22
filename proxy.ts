@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const publicRoutes = ['/sign-in', '/sign-up']
 
+function redirectTo(path: string, req: NextRequest) {
+  return NextResponse.redirect(new URL(path, req.nextUrl))
+}
+
 export function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname
   const isPublicRoute = publicRoutes.includes(path)
@@ -9,24 +13,24 @@ export function proxy(req: NextRequest) {
   const session = req.cookies.get('bla_session')?.value
   const role = req.cookies.get('bla_role')?.value
 
-  if (!session && !isPublicRoute) {
-    return NextResponse.redirect(new URL('/sign-in', req.nextUrl))
+  if (isPublicRoute) {
+    return NextResponse.next()
   }
 
-  if (session && isPublicRoute) {
-    return NextResponse.redirect(new URL(role === 'librarian' ? '/librarian' : '/member', req.nextUrl))
+  if (!session || !role) {
+    return redirectTo('/sign-in', req)
   }
 
   if (path.startsWith('/librarian') && role !== 'librarian') {
-    return NextResponse.redirect(new URL('/', req.nextUrl))
+    return redirectTo('/sign-in', req)
   }
 
   if (path.startsWith('/member') && role !== 'member') {
-    return NextResponse.redirect(new URL('/', req.nextUrl))
+    return redirectTo('/sign-in', req)
   }
 
   if (path === '/') {
-    return NextResponse.redirect(new URL(role === 'librarian' ? '/librarian' : '/member', req.nextUrl))
+    return redirectTo(role === 'librarian' ? '/librarian' : '/member', req)
   }
 
   return NextResponse.next()
