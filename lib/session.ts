@@ -37,6 +37,7 @@ export async function setRoleCookie(role: string): Promise<void> {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
+    maxAge: 630720000,
   })
 }
 
