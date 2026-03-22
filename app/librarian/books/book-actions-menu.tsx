@@ -40,11 +40,11 @@ export function BookActionsMenu({ book }: { book: Book }) {
     <>
       <div className="flex items-center justify-end gap-1">
         <Button variant="ghost" size="icon" onClick={() => setDialog('edit')}>
-          <PencilIcon />
+          <PencilIcon className="text-blue-500" />
           <span className="sr-only">Edit</span>
         </Button>
         <Button variant="ghost" size="icon" onClick={() => setDialog('delete')}>
-          <Trash2Icon />
+          <Trash2Icon className="text-red-500" />
           <span className="sr-only">Delete</span>
         </Button>
       </div>

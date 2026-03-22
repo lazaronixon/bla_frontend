@@ -43,7 +43,7 @@ export default async function Page() {
                 <TableCell className="font-medium">{b.book.title}</TableCell>
                 <TableCell>{b.book.author}</TableCell>
                 <TableCell className="text-right">{formatLocalDateTime(b.created_at)}</TableCell>
-                <TableCell className="text-right"><DueCell dueAt={b.due_at} /></TableCell>
+                <TableCell className="text-right"><DueCell dueAt={b.due_at} returnedAt={b.returned_at} /></TableCell>
                 <TableCell className="text-right">{b.returned_at ? formatLocalDateTime(b.returned_at) : '—'}</TableCell>
               </TableRow>
             ))
