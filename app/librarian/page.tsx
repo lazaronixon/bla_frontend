@@ -1,8 +1,101 @@
-export default function Page() {
+import { getDashboardStats, getDueToday, getMembersWithOverdueBooks } from '@/app/actions/books'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+
+export default async function Page() {
+  const [stats, dueToday, overdueMembers] = await Promise.all([
+    getDashboardStats(),
+    getDueToday(),
+    getMembersWithOverdueBooks(),
+  ])
+
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-8">
       <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-      <p className="text-sm text-muted-foreground">Welcome to BLA Library.</p>
+
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Books</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{stats.total_books}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Borrowed</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{stats.total_borrowed}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold tracking-tight">Due Today</h2>
+        <div className="overflow-y-auto max-h-80 rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Book Title</TableHead>
+                <TableHead>Member Email</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {dueToday.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={2} className="text-center text-muted-foreground">
+                    No books due today.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                dueToday.map((b) => (
+                  <TableRow key={b.id}>
+                    <TableCell className="font-medium">{b.book.title}</TableCell>
+                    <TableCell>{b.user.email_address}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold tracking-tight">Members with Overdue Books</h2>
+        <div className="overflow-y-auto max-h-80 rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Email</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {overdueMembers.length === 0 ? (
+                <TableRow>
+                  <TableCell className="text-center text-muted-foreground">
+                    No members with overdue books.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                overdueMembers.map((m) => (
+                  <TableRow key={m.id}>
+                    <TableCell>{m.email_address}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     </div>
   )
 }

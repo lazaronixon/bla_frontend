@@ -1,4 +1,4 @@
-import { createBook, updateBook, returnBorrowing } from '@/app/actions/books'
+import { createBook, updateBook, returnBorrowing, getDashboardStats, getDueToday, getMembersWithOverdueBooks } from '@/app/actions/books'
 import { BACKEND_URL } from '@/lib/config'
 
 jest.mock('next/cache', () => ({
@@ -102,6 +102,83 @@ describe('updateBook', () => {
     })
     const result = await updateBook(1, undefined, makeFormData(validBook))
     expect(result).toEqual({ error: 'Something went wrong.' })
+  })
+})
+
+describe('getDashboardStats', () => {
+  beforeEach(() => {
+    mockGetSession.mockResolvedValue('test-token')
+  })
+
+  it('fetches /books/total with auth header', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ total_books: 10, total_borrowed: 3 }) })
+    await getDashboardStats()
+    expect(global.fetch).toHaveBeenCalledWith(`${BACKEND_URL}/books/total`, expect.objectContaining({
+      headers: expect.objectContaining({ Authorization: 'Bearer test-token' }),
+    }))
+  })
+
+  it('returns parsed stats on success', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ total_books: 10, total_borrowed: 3 }) })
+    const result = await getDashboardStats()
+    expect(result).toEqual({ total_books: 10, total_borrowed: 3 })
+  })
+
+  it('throws on non-ok response', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false })
+    await expect(getDashboardStats()).rejects.toThrow('Failed to fetch dashboard stats')
+  })
+})
+
+describe('getDueToday', () => {
+  beforeEach(() => {
+    mockGetSession.mockResolvedValue('test-token')
+  })
+
+  it('fetches /books/due_today with auth header', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => [] })
+    await getDueToday()
+    expect(global.fetch).toHaveBeenCalledWith(`${BACKEND_URL}/books/due_today`, expect.objectContaining({
+      headers: expect.objectContaining({ Authorization: 'Bearer test-token' }),
+    }))
+  })
+
+  it('returns parsed borrowings on success', async () => {
+    const borrowings = [{ id: 1, due_at: '2026-03-21', returned_at: null, created_at: '2026-03-07', user: { id: 2, email_address: 'a@b.com', role: 'member' }, book: { id: 5, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '123', copies: 2 } }]
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => borrowings })
+    const result = await getDueToday()
+    expect(result).toEqual(borrowings)
+  })
+
+  it('throws on non-ok response', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false })
+    await expect(getDueToday()).rejects.toThrow('Failed to fetch due today')
+  })
+})
+
+describe('getMembersWithOverdueBooks', () => {
+  beforeEach(() => {
+    mockGetSession.mockResolvedValue('test-token')
+  })
+
+  it('fetches /members/with_overdue_books with auth header', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => [] })
+    await getMembersWithOverdueBooks()
+    expect(global.fetch).toHaveBeenCalledWith(`${BACKEND_URL}/members/with_overdue_books`, expect.objectContaining({
+      headers: expect.objectContaining({ Authorization: 'Bearer test-token' }),
+    }))
+  })
+
+  it('returns parsed members on success', async () => {
+    const members = [{ id: 1, email_address: 'late@example.com', role: 'member' }]
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => members })
+    const result = await getMembersWithOverdueBooks()
+    expect(result).toEqual(members)
+  })
+
+  it('throws on non-ok response', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false })
+    await expect(getMembersWithOverdueBooks()).rejects.toThrow('Failed to fetch overdue members')
   })
 })
 

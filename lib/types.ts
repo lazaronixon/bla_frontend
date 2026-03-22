@@ -19,4 +19,5 @@ export type Borrowing = {
   returned_at: string | null
   created_at: string
   user: BookUser
+  book: Book
 }

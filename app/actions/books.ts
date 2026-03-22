@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { getSession } from '@/lib/session'
 import { BACKEND_URL } from '@/lib/config'
-import type { Book, Borrowing } from '@/lib/types'
+import type { Book, BookUser, Borrowing } from '@/lib/types'
 
 
 export async function getBooks(q?: string): Promise<Book[]> {
@@ -31,6 +31,33 @@ export async function getBorrowings(id: string): Promise<Borrowing[]> {
     headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
   })
   if (!res.ok) return []
+  return res.json()
+}
+
+export async function getDashboardStats(): Promise<{ total_books: number; total_borrowed: number }> {
+  const token = await getSession()
+  const res = await fetch(`${BACKEND_URL}/books/total`, {
+    headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw new Error('Failed to fetch dashboard stats')
+  return res.json()
+}
+
+export async function getDueToday(): Promise<Borrowing[]> {
+  const token = await getSession()
+  const res = await fetch(`${BACKEND_URL}/books/due_today`, {
+    headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw new Error('Failed to fetch due today')
+  return res.json()
+}
+
+export async function getMembersWithOverdueBooks(): Promise<BookUser[]> {
+  const token = await getSession()
+  const res = await fetch(`${BACKEND_URL}/members/with_overdue_books`, {
+    headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw new Error('Failed to fetch overdue members')
   return res.json()
 }
 
