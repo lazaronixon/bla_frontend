@@ -99,7 +99,7 @@ export default async function Page() {
             <TableHeader>
               <TableRow>
                 <TableHead>ID</TableHead>
-                <TableHead>Email</TableHead>
+                <TableHead className="w-full">Email</TableHead>
                 <TableHead className="text-right">Member since</TableHead>
               </TableRow>
             </TableHeader>
