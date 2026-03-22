@@ -1,54 +1,51 @@
-import { LibraryIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { signOut } from '@/app/actions/auth'
+import { AppSidebar } from "./app-sidebar"
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarHeader,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
   SidebarInset,
   SidebarProvider,
-  SidebarSeparator,
-} from '@/components/ui/sidebar'
-import { NavItems } from './nav-items'
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
-export default function MemberLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function Page({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider className="h-svh">
-      <Sidebar collapsible="none">
-        <SidebarHeader>
-          <div className="flex items-center gap-2 px-2 py-1">
-            <LibraryIcon className="size-5" />
-            <span className="font-semibold tracking-tight">BLA Library</span>
-          </div>
-        </SidebarHeader>
-        <SidebarSeparator />
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <NavItems />
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarSeparator />
-        <SidebarFooter>
-          <form action={signOut}>
-            <Button variant="destructive" size="sm" className="w-full">
-              Sign out
-            </Button>
-          </form>
-        </SidebarFooter>
-      </Sidebar>
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "19rem",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar />
       <SidebarInset>
-        <main className="flex-1 p-6 overflow-y-auto">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator
+            orientation="vertical"
+            className="mr-2 data-vertical:h-4 data-vertical:self-auto"
+          />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="#">Build Your Application</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           {children}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

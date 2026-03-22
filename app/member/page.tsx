@@ -9,7 +9,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatLocalDateTime } from '@/lib/utils'
-import { DueCell } from '@/components/due-cell'
+import { DueCell } from './due-cell'
 
 export default async function Page() {
   const borrowings = await getBorrowedBooks()
