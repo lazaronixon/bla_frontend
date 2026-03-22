@@ -18,24 +18,31 @@ jest.mock('lucide-react', () => ({
   GalleryVerticalEndIcon: () => null,
 }))
 
+const user = { email_address: 'librarian@example.com' }
+
 describe('AppSidebar (librarian)', () => {
   it('renders the Dashboard link', () => {
-    render(<AppSidebar />)
+    render(<AppSidebar user={user} />)
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument()
   })
 
   it('renders the Books link', () => {
-    render(<AppSidebar />)
+    render(<AppSidebar user={user} />)
     expect(screen.getByRole('link', { name: /books/i })).toBeInTheDocument()
   })
 
   it('renders the Sign Out link', () => {
-    render(<AppSidebar />)
+    render(<AppSidebar user={user} />)
     expect(screen.getByRole('link', { name: /sign out/i })).toBeInTheDocument()
   })
 
   it('renders the Session group', () => {
-    render(<AppSidebar />)
+    render(<AppSidebar user={user} />)
     expect(screen.getByText('Session')).toBeInTheDocument()
+  })
+
+  it('displays the user email address', () => {
+    render(<AppSidebar user={user} />)
+    expect(screen.getByText('librarian@example.com')).toBeInTheDocument()
   })
 })

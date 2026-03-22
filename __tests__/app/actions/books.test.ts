@@ -1,4 +1,4 @@
-import { createBook, updateBook, returnBorrowing, getDashboardStats, getDueToday, getMembersWithOverdueBooks } from '@/app/actions/books'
+import { createBook, updateBook, returnBorrowing, getDashboardStats, getDueToday, getMembersWithOverdueBooks, getCurrentUser } from '@/app/actions/books'
 import { BACKEND_URL } from '@/lib/config'
 
 jest.mock('next/cache', () => ({
@@ -179,6 +179,33 @@ describe('getMembersWithOverdueBooks', () => {
   it('throws on non-ok response', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false })
     await expect(getMembersWithOverdueBooks()).rejects.toThrow('Failed to fetch overdue members')
+  })
+})
+
+describe('getCurrentUser', () => {
+  beforeEach(() => {
+    mockGetSession.mockResolvedValue('test-token')
+  })
+
+  it('fetches /my/user with auth header', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ id: 1, email_address: 'user@example.com', role: 'librarian' }) })
+    await getCurrentUser()
+    expect(global.fetch).toHaveBeenCalledWith(`${BACKEND_URL}/my/user`, expect.objectContaining({
+      headers: expect.objectContaining({ Authorization: 'Bearer test-token' }),
+    }))
+  })
+
+  it('returns the user on success', async () => {
+    const user = { id: 1, email_address: 'user@example.com', role: 'librarian' }
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => user })
+    const result = await getCurrentUser()
+    expect(result).toEqual(user)
+  })
+
+  it('returns null on non-ok response', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false })
+    const result = await getCurrentUser()
+    expect(result).toBeNull()
   })
 })
 

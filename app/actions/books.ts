@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { getSession } from '@/lib/session'
 import { BACKEND_URL } from '@/lib/config'
-import type { Book, BookUser, Borrowing } from '@/lib/types'
+import type { Book, User, Borrowing } from '@/lib/types'
 
 
 export async function getBooks(q?: string): Promise<Book[]> {
@@ -43,6 +43,15 @@ export async function getBorrowedBooks(): Promise<Borrowing[]> {
   return res.json()
 }
 
+export async function getCurrentUser(): Promise<User | null> {
+  const token = await getSession()
+  const res = await fetch(`${BACKEND_URL}/my/user`, {
+    headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) return null
+  return res.json()
+}
+
 export async function getDashboardStats(): Promise<{ total_books: number; total_borrowed: number }> {
   const token = await getSession()
   const res = await fetch(`${BACKEND_URL}/books/total`, {
@@ -61,7 +70,7 @@ export async function getDueToday(): Promise<Borrowing[]> {
   return res.json()
 }
 
-export async function getMembersWithOverdueBooks(): Promise<BookUser[]> {
+export async function getMembersWithOverdueBooks(): Promise<User[]> {
   const token = await getSession()
   const res = await fetch(`${BACKEND_URL}/members/with_overdue_books`, {
     headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },

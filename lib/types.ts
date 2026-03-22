@@ -7,11 +7,12 @@ export type Book = {
   copies: number
 }
 
-export type BookUser = {
+export type User = {
   id: number
   email_address: string
   role: string
   created_at: string
+  updated_at: string
 }
 
 export type Borrowing = {
@@ -19,6 +20,6 @@ export type Borrowing = {
   due_at: string
   returned_at: string | null
   created_at: string
-  user: BookUser
+  user: User
   book: Book
 }

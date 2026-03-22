@@ -15,6 +15,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { GalleryVerticalEndIcon } from "lucide-react"
+import type { User } from "@/lib/types"
 
 const data = {
   navMain: [
@@ -45,7 +46,7 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & { user: User }) {
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
@@ -58,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-medium">BLA Library</span>
-                  <span className="">v1.0.0</span>
+                  <span className="">{user.email_address}</span>
                 </div>
               </a>
             </SidebarMenuButton>
