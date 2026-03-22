@@ -4,6 +4,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -69,9 +70,9 @@ export default async function BookBorrowingsPage({
         <TableHeader>
           <TableRow>
             <TableHead>Member</TableHead>
-            <TableHead>Borrowed on</TableHead>
-            <TableHead>Due</TableHead>
-            <TableHead>Returned</TableHead>
+            <TableHead className="text-right">Borrowed on</TableHead>
+            <TableHead className="text-right">Due</TableHead>
+            <TableHead className="text-right">Returned</TableHead>
             <TableHead />
           </TableRow>
         </TableHeader>
@@ -86,9 +87,9 @@ export default async function BookBorrowingsPage({
             borrowings.map((b) => (
               <TableRow key={b.id}>
                 <TableCell className="font-medium">{b.user.email_address}</TableCell>
-                <TableCell>{formatLocalDateTime(b.created_at)}</TableCell>
-                <TableCell><DueCell dueAt={b.due_at} /></TableCell>
-                <TableCell>{b.returned_at ? formatLocalDateTime(b.returned_at) : '—'}</TableCell>
+                <TableCell className="text-right">{formatLocalDateTime(b.created_at)}</TableCell>
+                <TableCell className="text-right"><DueCell dueAt={b.due_at} /></TableCell>
+                <TableCell className="text-right">{b.returned_at ? formatLocalDateTime(b.returned_at) : '—'}</TableCell>
                 <TableCell className="text-right">
                   <ReturnButton bookId={book.id} borrowingId={b.id} disabled={!!b.returned_at} />
                 </TableCell>
@@ -96,6 +97,13 @@ export default async function BookBorrowingsPage({
             ))
           )}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell className="font-medium">Total</TableCell>
+            <TableCell colSpan={3} />
+            <TableCell className="text-right font-medium">{borrowings.length} {borrowings.length === 1 ? 'borrowing' : 'borrowings'}</TableCell>
+          </TableRow>
+        </TableFooter>
       </Table>
     </div>
   )

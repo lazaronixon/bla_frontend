@@ -4,6 +4,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -65,6 +66,12 @@ export default async function Page() {
                 ))
               )}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell className="font-medium">Total</TableCell>
+                <TableCell className="text-right font-medium">{dueToday.length} {dueToday.length === 1 ? 'book' : 'books'}</TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         </div>
       </div>
@@ -93,6 +100,12 @@ export default async function Page() {
                 ))
               )}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell className="font-medium">Total</TableCell>
+                <TableCell className="text-right font-medium">{overdueMembers.length} {overdueMembers.length === 1 ? 'member' : 'members'}</TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         </div>
       </div>

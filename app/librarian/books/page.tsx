@@ -2,6 +2,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -30,7 +31,7 @@ export default async function BooksPage({
             <TableHead>Author</TableHead>
             <TableHead>Genre</TableHead>
             <TableHead>ISBN</TableHead>
-            <TableHead>Copies</TableHead>
+            <TableHead className="text-right">Copies</TableHead>
             <TableHead />
           </TableRow>
         </TableHeader>
@@ -41,13 +42,21 @@ export default async function BooksPage({
               <TableCell>{book.author}</TableCell>
               <TableCell>{book.genre}</TableCell>
               <TableCell>{book.isbn}</TableCell>
-              <TableCell>{book.copies}</TableCell>
+              <TableCell className="text-right">{book.copies}</TableCell>
               <TableCell className="text-right">
                 <BookActionsMenu book={book} />
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell className="font-medium">Total</TableCell>
+            <TableCell colSpan={3} />
+            <TableCell className="text-right">{books.reduce((sum, book) => sum + book.copies, 0)}</TableCell>
+            <TableCell className="text-right font-medium">{books.length} {books.length === 1 ? 'book' : 'books'}</TableCell>
+          </TableRow>
+        </TableFooter>
       </Table>
     </div>
   )
