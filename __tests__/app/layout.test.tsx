@@ -14,6 +14,19 @@ jest.mock('@/components/ui/tooltip', () => ({
   TooltipProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
 
+const originalError = console.error
+
+beforeAll(() => {
+  console.error = (...args: unknown[]) => {
+    if (typeof args[0] === 'string' && args[0].includes('cannot be a child of')) return
+    originalError(...args)
+  }
+})
+
+afterAll(() => {
+  console.error = originalError
+})
+
 describe('RootLayout', () => {
   it('renders children', () => {
     render(<RootLayout><p>content</p></RootLayout>)

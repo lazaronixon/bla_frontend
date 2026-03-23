@@ -64,6 +64,7 @@ export function BookActionsMenu({ book }: { book: Book }) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Book</DialogTitle>
+            <DialogDescription>Update the details of "{book.title}".</DialogDescription>
           </DialogHeader>
           <EditBookForm
             book={book}
