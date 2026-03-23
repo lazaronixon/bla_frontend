@@ -65,13 +65,15 @@ export default async function Page() {
               <TableRow>
                 <TableHead>ID</TableHead>
                 <TableHead className="w-full">Email</TableHead>
+                <TableHead className="text-right">Borrowed</TableHead>
+                <TableHead className="text-right">Overdue</TableHead>
                 <TableHead className="text-right">Member since</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {overdueMembers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center text-muted-foreground">
                     No members with overdue books.
                   </TableCell>
                 </TableRow>
@@ -80,6 +82,8 @@ export default async function Page() {
                   <TableRow key={m.id}>
                     <TableCell>#{m.id}</TableCell>
                     <TableCell>{m.email_address}</TableCell>
+                    <TableCell className="text-right">{m.borrowed_books_count}</TableCell>
+                    <TableCell className="text-right">{m.overdue_books_count}</TableCell>
                     <TableCell className="text-right">{new Date(m.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</TableCell>
                   </TableRow>
                 ))
@@ -88,6 +92,8 @@ export default async function Page() {
             <TableFooter>
               <TableRow>
                 <TableCell className="font-medium">Total</TableCell>
+                <TableCell />
+                <TableCell />
                 <TableCell />
                 <TableCell className="text-right font-medium">{overdueMembers.length} {overdueMembers.length === 1 ? 'member' : 'members'}</TableCell>
               </TableRow>
