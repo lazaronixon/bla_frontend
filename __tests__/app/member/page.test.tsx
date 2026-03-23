@@ -20,7 +20,7 @@ const borrowings = [
     returned_at: null,
     created_at: '2026-03-01T00:00:00Z',
     user: { id: 2, email_address: 'member@example.com', role: 'member' },
-    book: { id: 1, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '978-0441013593', copies: 3 },
+    book: { id: 1, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '978-0441013593', copies: 3, available: 2 },
   },
   {
     id: 11,
@@ -28,7 +28,7 @@ const borrowings = [
     returned_at: '2026-03-10T00:00:00Z',
     created_at: '2026-03-01T00:00:00Z',
     user: { id: 2, email_address: 'member@example.com', role: 'member' },
-    book: { id: 2, title: 'Foundation', author: 'Isaac Asimov', genre: 'Sci-Fi', isbn: '978-0553293357', copies: 2 },
+    book: { id: 2, title: 'Foundation', author: 'Isaac Asimov', genre: 'Sci-Fi', isbn: '978-0553293357', copies: 2, available: 1 },
   },
 ]
 

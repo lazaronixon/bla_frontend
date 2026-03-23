@@ -36,6 +36,7 @@ const book = {
   genre: 'Sci-Fi',
   isbn: '978-0441013593',
   copies: 3,
+  available: 2,
 }
 
 describe('BookActionsMenu', () => {

@@ -33,6 +33,7 @@ export default async function BooksPage({
             <TableHead>Genre</TableHead>
             <TableHead>ISBN</TableHead>
             <TableHead className="text-right">Copies</TableHead>
+            <TableHead className="text-right">Available</TableHead>
             <TableHead />
           </TableRow>
         </TableHeader>
@@ -45,8 +46,9 @@ export default async function BooksPage({
               <TableCell>{book.genre}</TableCell>
               <TableCell>{book.isbn}</TableCell>
               <TableCell className="text-right">{book.copies}</TableCell>
+              <TableCell className="text-right">{book.available}</TableCell>
               <TableCell className="text-right">
-                <BorrowButton bookId={book.id} />
+                <BorrowButton bookId={book.id} disabled={book.available <= 0} />
               </TableCell>
             </TableRow>
           ))}
@@ -56,6 +58,7 @@ export default async function BooksPage({
             <TableCell className="font-medium">Total</TableCell>
             <TableCell colSpan={4} />
             <TableCell className="text-right">{books.reduce((sum, book) => sum + book.copies, 0)}</TableCell>
+            <TableCell className="text-right">{books.reduce((sum, book) => sum + book.available, 0)}</TableCell>
             <TableCell className="text-right font-medium">{books.length} {books.length === 1 ? 'book' : 'books'}</TableCell>
           </TableRow>
         </TableFooter>

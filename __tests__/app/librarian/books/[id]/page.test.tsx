@@ -34,6 +34,7 @@ const book = {
   genre: 'Sci-Fi',
   isbn: '978-0441013593',
   copies: 3,
+  available: 2,
 }
 
 const borrowings = [
@@ -85,6 +86,7 @@ describe('BookBorrowingsPage', () => {
     expect(screen.getByText('Sci-Fi')).toBeInTheDocument()
     expect(screen.getByText('978-0441013593')).toBeInTheDocument()
     expect(screen.getByText('3')).toBeInTheDocument()
+    expect(screen.getByText('2')).toBeInTheDocument()
   })
 
   it('renders a row for each borrowing', async () => {

@@ -5,6 +5,7 @@ export type Book = {
   genre: string
   isbn: string
   copies: number
+  available: number
 }
 
 export type User = {

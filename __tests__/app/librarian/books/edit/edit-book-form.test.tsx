@@ -14,7 +14,7 @@ jest.mock('react', () => ({
   useActionState: (...args: unknown[]) => mockUseActionState(...args),
 }))
 
-const book = { id: 7, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '978-0441013593', copies: 3 }
+const book = { id: 7, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '978-0441013593', copies: 3, available: 2 }
 
 describe('EditBookForm', () => {
   beforeEach(() => {

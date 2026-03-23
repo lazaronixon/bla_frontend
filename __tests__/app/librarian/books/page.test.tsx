@@ -22,8 +22,8 @@ import { getBooks } from '@/app/actions/books'
 const mockGetBooks = getBooks as jest.Mock
 
 const books = [
-  { id: 1, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '978-0441013593', copies: 3 },
-  { id: 2, title: '1984', author: 'George Orwell', genre: 'Dystopia', isbn: '978-0451524935', copies: 5 },
+  { id: 1, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '978-0441013593', copies: 3, available: 2 },
+  { id: 2, title: '1984', author: 'George Orwell', genre: 'Dystopia', isbn: '978-0451524935', copies: 5, available: 4 },
 ]
 
 function mockApi(bookList = books) {
@@ -83,9 +83,20 @@ describe('BooksPage', () => {
     expect(menus[1]).toHaveAttribute('data-book-id', '2')
   })
 
+  it('renders available count for each book', async () => {
+    await renderPage()
+    expect(screen.getByText('2')).toBeInTheDocument()
+    expect(screen.getByText('4')).toBeInTheDocument()
+  })
+
   it('renders footer with total copies', async () => {
     await renderPage()
     expect(screen.getByText('8')).toBeInTheDocument()
+  })
+
+  it('renders footer with total available', async () => {
+    await renderPage()
+    expect(screen.getByText('6')).toBeInTheDocument()
   })
 
   it('renders footer with total book count', async () => {

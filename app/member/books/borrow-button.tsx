@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog'
 import { createBorrowing } from '@/app/actions/books'
 
-export function BorrowButton({ bookId }: { bookId: number }) {
+export function BorrowButton({ bookId, disabled }: { bookId: number; disabled?: boolean }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [pending, startTransition] = useTransition()
@@ -35,7 +35,7 @@ export function BorrowButton({ bookId }: { bookId: number }) {
 
   return (
     <>
-      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+      <Button variant="outline" size="sm" onClick={() => setOpen(true)} disabled={disabled}>
         Borrow
       </Button>
 

@@ -32,7 +32,7 @@ export default async function BookBorrowingsPage({
         <h1 className="text-2xl font-semibold tracking-tight">{book.title}</h1>
         <p className="text-muted-foreground">#{book.id}</p>
       </div>
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-5">
         <div>
           <dt className="text-muted-foreground">Author</dt>
           <dd className="font-medium">{book.author}</dd>
@@ -48,6 +48,10 @@ export default async function BookBorrowingsPage({
         <div>
           <dt className="text-muted-foreground">Copies</dt>
           <dd className="font-medium">{book.copies}</dd>
+        </div>
+        <div>
+          <dt className="text-muted-foreground">Available</dt>
+          <dd className="font-medium">{book.available}</dd>
         </div>
       </dl>
       <h2 className="text-lg font-semibold tracking-tight">Borrowings</h2>
