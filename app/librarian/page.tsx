@@ -73,7 +73,7 @@ export default async function Page() {
                 dueToday.map((b) => (
                   <TableRow key={b.id}>
                     <TableCell><Link href={`/librarian/books/${b.book.id}`} className="underline">#{b.book.id}</Link></TableCell>
-                    <TableCell className="font-medium">{b.book.title}</TableCell>
+                    <TableCell className="font-medium"><Link href={`/librarian/books/${b.book.id}`} className="underline">{b.book.title}</Link></TableCell>
                     <TableCell>#{b.user.id}</TableCell>
                     <TableCell>{b.user.email_address}</TableCell>
                     <TableCell className="text-right">{formatLocalDateTime(b.created_at)}</TableCell>

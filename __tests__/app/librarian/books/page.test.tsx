@@ -104,4 +104,10 @@ describe('BooksPage', () => {
     expect(screen.getByText('#1')).toBeInTheDocument()
     expect(screen.getByText('#2')).toBeInTheDocument()
   })
+
+  it('links book title to book detail page', async () => {
+    await renderPage()
+    const link = screen.getByRole('link', { name: 'Dune' })
+    expect(link).toHaveAttribute('href', '/librarian/books/1')
+  })
 })

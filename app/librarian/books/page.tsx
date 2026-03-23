@@ -41,7 +41,7 @@ export default async function BooksPage({
           {books.map((book) => (
             <TableRow key={book.id}>
               <TableCell><Link href={`/librarian/books/${book.id}`} className="underline">#{book.id}</Link></TableCell>
-              <TableCell className="font-medium">{book.title}</TableCell>
+              <TableCell className="font-medium"><Link href={`/librarian/books/${book.id}`} className="underline">{book.title}</Link></TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell>{book.genre}</TableCell>
               <TableCell>{book.isbn}</TableCell>

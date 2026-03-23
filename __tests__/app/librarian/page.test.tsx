@@ -106,6 +106,12 @@ describe('DashboardPage', () => {
     expect(screen.getByText('#5')).toBeInTheDocument()
   })
 
+  it('links book title to book detail page in due today', async () => {
+    await renderPage()
+    const link = screen.getByRole('link', { name: 'Dune' })
+    expect(link).toHaveAttribute('href', '/librarian/books/5')
+  })
+
   it('renders # prefixed member id in due today', async () => {
     await renderPage()
     expect(screen.getByText('#10')).toBeInTheDocument()
