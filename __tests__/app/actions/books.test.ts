@@ -1,4 +1,4 @@
-import { createBook, updateBook, returnBorrowing, getDashboardStats, getDueToday, getMembersWithOverdueBooks, getCurrentUser } from '@/app/actions/books'
+import { createBook, updateBook, returnBorrowing, getDashboardStats, getMembersWithOverdueBooks, getCurrentUser } from '@/app/actions/books'
 import { BACKEND_URL } from '@/lib/config'
 
 jest.mock('next/cache', () => ({
@@ -111,7 +111,7 @@ describe('getDashboardStats', () => {
   })
 
   it('fetches /books/total with auth header', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ total_books: 10, total_borrowed: 3 }) })
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ total_books: 10, total_borrowed: 3, total_due_today: 1 }) })
     await getDashboardStats()
     expect(global.fetch).toHaveBeenCalledWith(`${BACKEND_URL}/books/total`, expect.objectContaining({
       headers: expect.objectContaining({ Authorization: 'Bearer test-token' }),
@@ -119,40 +119,14 @@ describe('getDashboardStats', () => {
   })
 
   it('returns parsed stats on success', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ total_books: 10, total_borrowed: 3 }) })
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ total_books: 10, total_borrowed: 3, total_due_today: 1 }) })
     const result = await getDashboardStats()
-    expect(result).toEqual({ total_books: 10, total_borrowed: 3 })
+    expect(result).toEqual({ total_books: 10, total_borrowed: 3, total_due_today: 1 })
   })
 
   it('throws on non-ok response', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false })
     await expect(getDashboardStats()).rejects.toThrow('Failed to fetch dashboard stats')
-  })
-})
-
-describe('getDueToday', () => {
-  beforeEach(() => {
-    mockGetSession.mockResolvedValue('test-token')
-  })
-
-  it('fetches /books/due_today with auth header', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => [] })
-    await getDueToday()
-    expect(global.fetch).toHaveBeenCalledWith(`${BACKEND_URL}/books/due_today`, expect.objectContaining({
-      headers: expect.objectContaining({ Authorization: 'Bearer test-token' }),
-    }))
-  })
-
-  it('returns parsed borrowings on success', async () => {
-    const borrowings = [{ id: 1, due_at: '2026-03-21', returned_at: null, created_at: '2026-03-07', user: { id: 2, email_address: 'a@b.com', role: 'member' }, book: { id: 5, title: 'Dune', author: 'Frank Herbert', genre: 'Sci-Fi', isbn: '123', copies: 2 } }]
-    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => borrowings })
-    const result = await getDueToday()
-    expect(result).toEqual(borrowings)
-  })
-
-  it('throws on non-ok response', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: false })
-    await expect(getDueToday()).rejects.toThrow('Failed to fetch due today')
   })
 })
 

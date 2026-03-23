@@ -52,7 +52,7 @@ export async function getCurrentUser(): Promise<User | null> {
   return res.json()
 }
 
-export async function getDashboardStats(): Promise<{ total_books: number; total_borrowed: number }> {
+export async function getDashboardStats(): Promise<{ total_books: number; total_borrowed: number; total_due_today: number }> {
   const token = await getSession()
   const res = await fetch(`${BACKEND_URL}/books/total`, {
     headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },

@@ -1,6 +1,6 @@
-import { getDashboardStats, getDueToday, getMembersWithOverdueBooks } from '@/app/actions/books'
+import { getDashboardStats, getMembersWithOverdueBooks } from '@/app/actions/books'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookIcon, BookOpenIcon } from 'lucide-react'
+import { BookIcon, BookOpenIcon, ClockIcon } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -10,13 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import Link from 'next/link'
-import { formatLocalDateTime } from '@/lib/utils'
 
 export default async function Page() {
-  const [stats, dueToday, overdueMembers] = await Promise.all([
+  const [stats, overdueMembers] = await Promise.all([
     getDashboardStats(),
-    getDueToday(),
     getMembersWithOverdueBooks(),
   ])
 
@@ -47,49 +44,17 @@ export default async function Page() {
             <p className="text-3xl font-bold">{stats.total_borrowed}</p>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold tracking-tight">Due Today</h2>
-        <div className="overflow-auto max-h-80 rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Book ID</TableHead>
-                <TableHead>Book Title</TableHead>
-                <TableHead>Member ID</TableHead>
-                <TableHead>Member Email</TableHead>
-                <TableHead className="text-right">Borrowed on</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {dueToday.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
-                    No books due today.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                dueToday.map((b) => (
-                  <TableRow key={b.id}>
-                    <TableCell><Link href={`/librarian/books/${b.book.id}`} className="underline">#{b.book.id}</Link></TableCell>
-                    <TableCell className="font-medium"><Link href={`/librarian/books/${b.book.id}`} className="underline">{b.book.title}</Link></TableCell>
-                    <TableCell>#{b.user.id}</TableCell>
-                    <TableCell>{b.user.email_address}</TableCell>
-                    <TableCell className="text-right">{formatLocalDateTime(b.created_at)}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell className="font-medium">Total</TableCell>
-                <TableCell colSpan={3} />
-                <TableCell className="text-right font-medium">{dueToday.length} {dueToday.length === 1 ? 'book' : 'books'}</TableCell>
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Due Today</CardTitle>
+            <div className="rounded-full bg-muted p-2">
+              <ClockIcon className="size-4 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{stats.total_due_today}</p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="flex flex-col gap-3">
