@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+const roles = ['librarian', 'member']
 const publicRoutes = ['/sign-in', '/sign-up']
 
 function redirectTo(path: string, req: NextRequest) {
@@ -8,6 +9,7 @@ function redirectTo(path: string, req: NextRequest) {
 
 export function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname
+  const segments = path.split('/').filter(Boolean)
   const isPublicRoute = publicRoutes.includes(path)
 
   const session = req.cookies.get('bla_session')?.value
@@ -17,25 +19,21 @@ export function proxy(req: NextRequest) {
     return NextResponse.next()
   }
 
-  if (!session || !role) {
+  if (!session || !role || !roles.includes(role)) {
     return redirectTo('/sign-in', req)
   }
 
-  if (path.startsWith('/librarian') && role !== 'librarian') {
-    return redirectTo('/sign-in', req)
+  if (segments[0] === 'librarian' && role !== 'librarian') {
+    return redirectTo('/', req)
   }
 
-  if (path.startsWith('/member') && role !== 'member') {
-    return redirectTo('/sign-in', req)
-  }
-
-  if (path === '/') {
-    return redirectTo(role === 'librarian' ? '/librarian' : '/member', req)
+  if (segments[0] === 'member' && role !== 'member') {
+    return redirectTo('/', req)
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }

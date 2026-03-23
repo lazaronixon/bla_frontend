@@ -41,23 +41,14 @@ describe('signIn', () => {
     expect(result).toEqual({ error: 'Authentication failed. Please try again.' })
   })
 
-  it('redirects to /member for a member on success', async () => {
+  it('redirects to / on success', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       headers: new Headers({ 'X-Session-Token': 'my-token', 'X-Session-Expires-In': '3600' }),
       json: async () => ({ role: 'member' }),
     })
-    await expect(signIn(undefined, makeFormData(signInData))).rejects.toThrow('NEXT_REDIRECT:/member')
+    await expect(signIn(undefined, makeFormData(signInData))).rejects.toThrow('NEXT_REDIRECT:/')
     expect(mockCreateSession).toHaveBeenCalledWith('my-token', 3600)
-  })
-
-  it('redirects to /librarian for a librarian on success', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      headers: new Headers({ 'X-Session-Token': 'my-token', 'X-Session-Expires-In': '3600' }),
-      json: async () => ({ role: 'librarian' }),
-    })
-    await expect(signIn(undefined, makeFormData(signInData))).rejects.toThrow('NEXT_REDIRECT:/librarian')
   })
 
   it('posts to the correct endpoint with correct body', async () => {

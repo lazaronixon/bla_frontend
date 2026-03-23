@@ -34,7 +34,7 @@ describe('proxy', () => {
       req.cookies.set('bla_role', 'member')
       const res = proxy(req)
       expect(res.status).toBe(307)
-      expect(res.headers.get('location')).toContain('/sign-in')
+      expect(res.headers.get('location')).toBe('http://localhost:3001/')
     })
 
     it('redirects a librarian away from /member', () => {
@@ -42,7 +42,7 @@ describe('proxy', () => {
       req.cookies.set('bla_role', 'librarian')
       const res = proxy(req)
       expect(res.status).toBe(307)
-      expect(res.headers.get('location')).toContain('/sign-in')
+      expect(res.headers.get('location')).toBe('http://localhost:3001/')
     })
 
     it('allows a librarian to access /librarian/books', () => {
@@ -59,12 +59,26 @@ describe('proxy', () => {
       expect(res.headers.get('location')).toContain('/sign-in')
     })
 
-    it('redirects to /librarian when accessing / with a librarian session', () => {
+    it('redirects to /sign-in when role is unknown', () => {
+      const req = makeRequest('/', 'some-token')
+      req.cookies.set('bla_role', 'admin')
+      const res = proxy(req)
+      expect(res.status).toBe(307)
+      expect(res.headers.get('location')).toContain('/sign-in')
+    })
+
+    it('allows a librarian to access /', () => {
       const req = makeRequest('/', 'some-token')
       req.cookies.set('bla_role', 'librarian')
       const res = proxy(req)
-      expect(res.status).toBe(307)
-      expect(res.headers.get('location')).toContain('/librarian')
+      expect(res.status).toBe(200)
+    })
+
+    it('allows a member to access /', () => {
+      const req = makeRequest('/', 'some-token')
+      req.cookies.set('bla_role', 'member')
+      const res = proxy(req)
+      expect(res.status).toBe(200)
     })
   })
 

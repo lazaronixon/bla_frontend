@@ -36,7 +36,7 @@ export async function signIn(
   const { role } = await response.json()
   await setRoleCookie(role)
 
-  redirect(role === 'librarian' ? '/librarian' : '/member')
+  redirect('/')
 }
 
 export async function signUp(
