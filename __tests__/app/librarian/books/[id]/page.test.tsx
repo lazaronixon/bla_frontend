@@ -73,14 +73,15 @@ describe('BookBorrowingsPage', () => {
     await expect(renderPage('999')).rejects.toThrow('NEXT_NOT_FOUND')
   })
 
-  it('renders the book title and author', async () => {
+  it('renders the book title and id', async () => {
     await renderPage()
     expect(screen.getByRole('heading', { name: 'Dune' })).toBeInTheDocument()
-    expect(screen.getByText('Frank Herbert')).toBeInTheDocument()
+    expect(screen.getByText('#1')).toBeInTheDocument()
   })
 
   it('renders book metadata', async () => {
     await renderPage()
+    expect(screen.getByText('Frank Herbert')).toBeInTheDocument()
     expect(screen.getByText('Sci-Fi')).toBeInTheDocument()
     expect(screen.getByText('978-0441013593')).toBeInTheDocument()
     expect(screen.getByText('3')).toBeInTheDocument()

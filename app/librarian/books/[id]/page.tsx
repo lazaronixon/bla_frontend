@@ -30,9 +30,13 @@ export default async function BookBorrowingsPage({
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{book.title}</h1>
-        <p className="text-muted-foreground">{book.author}</p>
+        <p className="text-muted-foreground">#{book.id}</p>
       </div>
       <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-4">
+        <div>
+          <dt className="text-muted-foreground">Author</dt>
+          <dd className="font-medium">{book.author}</dd>
+        </div>
         <div>
           <dt className="text-muted-foreground">Genre</dt>
           <dd className="font-medium">{book.genre}</dd>
