@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useCallback, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { PencilIcon, Trash2Icon, LoaderCircleIcon } from 'lucide-react'
@@ -24,14 +24,25 @@ export function BookActionsMenu({ book }: { book: Book }) {
   const [dialog, setDialog] = useState<DialogState>(null)
   const [pending, startTransition] = useTransition()
 
+  const handleBookUpdated = useCallback(() => {
+    setDialog(null)
+    router.refresh()
+    toast.success('Book updated successfully')
+  }, [router])
+
+  const handleBookDeleted = useCallback(() => {
+    setDialog(null)
+    router.refresh()
+    toast.success('Book deleted successfully')
+  }, [router])
+
   function handleDelete() {
     startTransition(async () => {
       const state = await deleteBook(book.id)
       if (state?.error) {
         toast.error(state.error)
       } else {
-        setDialog(null)
-        router.refresh()
+        handleBookDeleted()
       }
     })
   }
@@ -56,10 +67,7 @@ export function BookActionsMenu({ book }: { book: Book }) {
           </DialogHeader>
           <EditBookForm
             book={book}
-            onSuccess={() => {
-              setDialog(null)
-              router.refresh()
-            }}
+            onSuccess={handleBookUpdated}
           />
         </DialogContent>
       </Dialog>

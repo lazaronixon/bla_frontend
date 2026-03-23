@@ -1,5 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { ReturnButton } from '@/app/librarian/books/[id]/return-button'
+import { toast } from 'sonner'
+
+jest.mock('sonner', () => ({
+  toast: { success: jest.fn(), error: jest.fn() },
+}))
 
 const mockRefresh = jest.fn()
 
@@ -19,6 +24,8 @@ describe('ReturnButton', () => {
   beforeEach(() => {
     mockRefresh.mockClear()
     mockedReturnBorrowing.mockClear()
+    jest.mocked(toast.success).mockClear()
+    jest.mocked(toast.error).mockClear()
   })
 
   it('renders the return button', () => {
@@ -79,5 +86,14 @@ describe('ReturnButton', () => {
     await screen.findByRole('button', { name: /^return$/i })
     expect(mockRefresh).toHaveBeenCalled()
     expect(screen.queryByText(/mark as returned/i)).not.toBeInTheDocument()
+  })
+
+  it('shows success toast after returning a book', async () => {
+    mockedReturnBorrowing.mockResolvedValue({ success: true })
+    render(<ReturnButton bookId={1} borrowingId={10} />)
+    fireEvent.click(screen.getByRole('button', { name: /^return$/i }))
+    fireEvent.click(screen.getByRole('button', { name: /confirm/i }))
+    await screen.findByRole('button', { name: /^return$/i })
+    expect(toast.success).toHaveBeenCalledWith('Book returned successfully')
   })
 })

@@ -1,5 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { BookActionsMenu } from '@/app/librarian/books/book-actions-menu'
+import { toast } from 'sonner'
+
+jest.mock('sonner', () => ({
+  toast: { success: jest.fn(), error: jest.fn() },
+}))
 
 const mockPush = jest.fn()
 const mockRefresh = jest.fn()
@@ -38,6 +43,8 @@ describe('BookActionsMenu', () => {
     mockPush.mockClear()
     mockRefresh.mockClear()
     mockedDeleteBook.mockClear()
+    jest.mocked(toast.success).mockClear()
+    jest.mocked(toast.error).mockClear()
   })
 
   it('renders Edit and Delete buttons', () => {
@@ -58,6 +65,13 @@ describe('BookActionsMenu', () => {
     fireEvent.click(screen.getByText('Save'))
     expect(mockRefresh).toHaveBeenCalled()
     expect(screen.queryByTestId('edit-book-form')).not.toBeInTheDocument()
+  })
+
+  it('shows success toast after updating a book', () => {
+    render(<BookActionsMenu book={book} />)
+    fireEvent.click(screen.getByRole('button', { name: /edit/i }))
+    fireEvent.click(screen.getByText('Save'))
+    expect(toast.success).toHaveBeenCalledWith('Book updated successfully')
   })
 
   it('opens the delete dialog when Delete is clicked', () => {
@@ -92,6 +106,16 @@ describe('BookActionsMenu', () => {
     fireEvent.click(deleteButtons[deleteButtons.length - 1])
     await screen.findByRole('button', { name: /edit/i })
     expect(mockRefresh).toHaveBeenCalled()
+  })
+
+  it('shows success toast after deleting a book', async () => {
+    mockedDeleteBook.mockResolvedValue({ success: true })
+    render(<BookActionsMenu book={book} />)
+    fireEvent.click(screen.getByRole('button', { name: /delete/i }))
+    const deleteButtons = screen.getAllByRole('button', { name: /^delete$/i })
+    fireEvent.click(deleteButtons[deleteButtons.length - 1])
+    await screen.findByRole('button', { name: /edit/i })
+    expect(toast.success).toHaveBeenCalledWith('Book deleted successfully')
   })
 
   it('closes the delete dialog after successful delete', async () => {

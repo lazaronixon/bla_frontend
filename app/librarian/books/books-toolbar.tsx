@@ -1,7 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { XIcon, PlusIcon } from 'lucide-react'
@@ -30,6 +31,12 @@ export function BooksToolbar({ initialQuery }: { initialQuery?: string }) {
       router.replace(`/librarian/books${params.size ? '?' + params : ''}`)
     }, 300)
   }
+
+  const handleBookCreated = useCallback(() => {
+    setOpen(false)
+    router.refresh()
+    toast.success('Book created successfully')
+  }, [router])
 
   function handleClear() {
     setValue('')
@@ -62,7 +69,7 @@ export function BooksToolbar({ initialQuery }: { initialQuery?: string }) {
           <DialogHeader>
             <DialogTitle>New Book</DialogTitle>
           </DialogHeader>
-          <NewBookForm onSuccess={() => { setOpen(false); router.refresh() }} />
+          <NewBookForm onSuccess={handleBookCreated} />
         </DialogContent>
       </Dialog>
     </div>

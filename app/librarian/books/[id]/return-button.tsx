@@ -36,6 +36,7 @@ export function ReturnButton({
         toast.error(state.error)
       } else {
         router.refresh()
+        toast.success('Book returned successfully')
       }
     })
   }
